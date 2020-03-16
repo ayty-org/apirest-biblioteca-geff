@@ -1,5 +1,7 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
+import br.com.phoebus.api.biblioteca.apirest.loan.LoanModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,6 +13,7 @@ public class BookModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "book_id")
     private long id;
 
     private String title;
@@ -22,6 +25,9 @@ public class BookModel implements Serializable {
     private String author;
 
     private String year;
+
+    @ManyToOne
+    private LoanModel loan;
 
     public long getId() {
         return id;
@@ -69,5 +75,13 @@ public class BookModel implements Serializable {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public LoanModel getLoan() {
+        return loan;
+    }
+
+    public void setLoan(LoanModel loan) {
+        this.loan = loan;
     }
 }
