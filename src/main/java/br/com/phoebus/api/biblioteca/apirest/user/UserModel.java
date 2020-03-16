@@ -1,6 +1,8 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
 
+import br.com.phoebus.api.biblioteca.apirest.loan.LoanModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,6 +13,7 @@ public class UserModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private long id;
 
     private String name;
@@ -18,6 +21,9 @@ public class UserModel implements Serializable {
     private int age;
 
     private String telephone;
+
+    @OneToOne
+    private LoanModel loan;
 
     public long getId() {
         return id;
@@ -49,5 +55,13 @@ public class UserModel implements Serializable {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public LoanModel getLoan() {
+        return loan;
+    }
+
+    public void setLoan(LoanModel loan) {
+        this.loan = loan;
     }
 }
