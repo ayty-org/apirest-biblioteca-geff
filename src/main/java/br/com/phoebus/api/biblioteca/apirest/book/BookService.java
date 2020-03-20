@@ -1,15 +1,16 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class BookService {
 
-    @Autowired
-    private BookRepository repository;
+    private final BookRepository repository;
 
     public BookModel findBookById(long id){
         return repository.findById(id);
