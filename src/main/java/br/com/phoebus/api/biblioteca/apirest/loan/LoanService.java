@@ -1,16 +1,17 @@
 package br.com.phoebus.api.biblioteca.apirest.loan;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class LoanService {
 
-    @Autowired
-    private LoanRepository repository;
+    private final LoanRepository repository;
 
     public LoanModel findLoanById(long id){
         return repository.findById(id);
