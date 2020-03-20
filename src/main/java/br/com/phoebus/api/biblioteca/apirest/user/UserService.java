@@ -20,6 +20,11 @@ public class UserService {
         return repository.findAll();
     }
 
+    public UserModel createUser(UserModel newUser){
+        repository.save(newUser);
+        return newUser;
+    }
+
     public UserModel updateUser(UserModel attUser){
         repository.save(attUser);
         return attUser;
