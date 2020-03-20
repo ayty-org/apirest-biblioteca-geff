@@ -12,11 +12,11 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService service;
 
     @GetMapping
     public ResponseEntity<List<UserModel>> listUsers(){
-        List<UserModel> users = userRepository.findAll();
+        List<UserModel> users = service.findUsers();
 
         return ResponseEntity.ok().body(users);
     }
@@ -25,7 +25,7 @@ public class UserController {
     // ok
     @GetMapping("/{id}")
     public ResponseEntity<UserModel> getUser(@PathVariable(value = "id") long id){
-        UserModel userFound = userRepository.findById(id);
+        UserModel userFound = service.findUserById(id);
         if (userFound == null){
             return ResponseEntity.notFound().build();
         }
@@ -36,16 +36,16 @@ public class UserController {
     //ok
     @PostMapping
     public ResponseEntity<UserModel> postUser(@RequestBody UserModel newUser){
-        userRepository.save(newUser);
+        service.createUser(newUser);
         return ResponseEntity.ok().body(newUser);
     }
 
     //retornar um ResponseEntity
     @DeleteMapping
     public ResponseEntity deleteUser(@RequestBody UserModel deleteUser){
-        UserModel delUser = userRepository.findById(deleteUser.getId()); //Não achei um metodo pronto que procurasse o User pelo User passado como parametro
+        UserModel delUser = service.findUserById(deleteUser.getId()); //Não achei um metodo pronto que procurasse o User pelo User passado como parametro
         if (delUser == deleteUser){
-            userRepository.delete(deleteUser);
+            service.deleteUser(deleteUser);
             return ResponseEntity.ok().build(); //Devo usar o build()??
         }
         return ResponseEntity.badRequest().build(); //Aqui tbm?
@@ -53,22 +53,22 @@ public class UserController {
     //retornar um ResponseEntity
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUserById(@PathVariable(value = "id") long id){
-        UserModel delUser = userRepository.findById(id);
+        UserModel delUser = service.findUserById(id);
         if (delUser == null){
             return ResponseEntity.badRequest().build(); //Aqui tbm?
         }
-        userRepository.deleteById(id);
+        service.deleteUserById(id);
         return ResponseEntity.ok().build(); //Aqui tbm?
 
     }
     //retornar um ResponseEntity
     @PutMapping
     public ResponseEntity<UserModel> putUser(@RequestBody UserModel attUser){
-        UserModel user = userRepository.findById(attUser.getId());
+        UserModel user = service.findUserById(attUser.getId());
         if (user == null){
             return ResponseEntity.badRequest().build();
         }
-        userRepository.save(attUser);
+        service.updateUser(attUser);
         return ResponseEntity.ok().body(attUser);
     }
 }

@@ -12,17 +12,17 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    BookRepository bookRepository;
+    BookService service;
 
     @GetMapping
     public ResponseEntity<List<BookModel>> listBooks(){
-        List<BookModel> books = bookRepository.findAll();
+        List<BookModel> books = service.findBooks();
         return ResponseEntity.ok().body(books);
     }
 
     @GetMapping("/{id}")
     ResponseEntity<BookModel> getBook(@PathVariable(value = "id") long id){
-        BookModel bookFound = bookRepository.findById(id);
+        BookModel bookFound = service.findBookById(id);
         if (bookFound == null){
             return ResponseEntity.notFound().build();
         }
@@ -31,16 +31,16 @@ public class BookController {
 
     @PostMapping
     ResponseEntity<BookModel> postBook(@RequestBody BookModel newBook){
-        bookRepository.save(newBook);
+        service.createBook(newBook);
         return ResponseEntity.ok().body(newBook);
     }
 
     //O Metodo Delete só existe ser for pelo ID ou pode ser sem ser pelo ID? como esse a baixo
     @DeleteMapping //Este metodo não está funcionando como deveria
     ResponseEntity deleteBook(@RequestBody BookModel deleteBook){
-        BookModel delBook = bookRepository.findById(deleteBook.getId());
+        BookModel delBook = service.findBookById(deleteBook.getId());
         if (delBook == deleteBook){ // Essa condição não está sendo satisfeita, procurar uma solução
-            bookRepository.delete(deleteBook);
+            service.deleteBook(deleteBook);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -48,22 +48,22 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     ResponseEntity deleteBookById(@PathVariable(value = "id") long id){
-        BookModel delBook = bookRepository.findById(id);
+        BookModel delBook = service.findBookById(id);
         if (delBook == null){
             return ResponseEntity.badRequest().build();
         }
-        bookRepository.deleteById(id);
+        service.deleteBookById(id);
         return ResponseEntity.ok().build();
 
     }
 
     @PutMapping
     ResponseEntity<BookModel> putBook(@RequestBody BookModel attBook){
-        BookModel book = bookRepository.findById(attBook.getId());
+        BookModel book = service.findBookById(attBook.getId());
         if (book == null){
             return ResponseEntity.badRequest().build();
         }
-        bookRepository.save(attBook);
+        service.updateBook(attBook);
         return ResponseEntity.ok().body(attBook);
     }
 }

@@ -12,17 +12,17 @@ import java.util.List;
 public class LoanController {
 
     @Autowired
-    private LoanRepository loanRepository;
+    private LoanService service;
 
     @GetMapping
     public ResponseEntity<List<LoanModel>> findAll(){
-        List<LoanModel> lend = loanRepository.findAll();
+        List<LoanModel> lend = service.findLend();
         return ResponseEntity.ok().body(lend);
     }
 
     @GetMapping(value = "/{id}")
     ResponseEntity<LoanModel> getLoan(@PathVariable(value = "id") long id){
-        LoanModel loan = loanRepository.findById(id);
+        LoanModel loan = service.findLoanById(id);
         if (loan == null){
             return ResponseEntity.notFound().build();
         }
@@ -31,15 +31,15 @@ public class LoanController {
 
     @PostMapping
     ResponseEntity<LoanModel> postLoan(@RequestBody LoanModel newLoan){
-        loanRepository.save(newLoan);
+        service.createLoan(newLoan);
         return ResponseEntity.ok().body(newLoan);
     }
 
     @DeleteMapping
     ResponseEntity deleteLoan(@RequestBody LoanModel deleteLoan){
-        LoanModel delLoan = loanRepository.findById(deleteLoan.getId());
+        LoanModel delLoan = service.findLoanById(deleteLoan.getId());
         if (delLoan == deleteLoan){
-            loanRepository.delete(deleteLoan);
+            service.deleteLoan(deleteLoan);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -47,21 +47,21 @@ public class LoanController {
 
     @DeleteMapping("/id")
     ResponseEntity deleteLoanById(@PathVariable(value = "id")long id){
-        LoanModel delLoan = loanRepository.findById(id);
+        LoanModel delLoan = service.findLoanById(id);
         if (delLoan == null){
             return ResponseEntity.badRequest().build();
         }
-        loanRepository.deleteById(id);
+        service.deleteLoanById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
     ResponseEntity putLoan(@RequestBody LoanModel attLoan){
-        LoanModel loan = loanRepository.findById(attLoan.getId());
+        LoanModel loan = service.findLoanById(attLoan.getId());
         if (loan == null){
             return ResponseEntity.badRequest().build();
         }
-        loanRepository.save(attLoan);
+        service.updateLoan(attLoan);
         return ResponseEntity.ok().body(attLoan);
     }
 }
