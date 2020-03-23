@@ -1,6 +1,7 @@
 package br.com.phoebus.api.biblioteca.apirest.loan;
 
 
+import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class LoanService {
     private final LoanRepository repository;
 
     public LoanModel findLoanById(long id){
+        verifyLoanExist(id);
         return repository.findById(id);
     }
 
@@ -21,14 +23,13 @@ public class LoanService {
         return repository.findAll();
     }
 
-    public LoanModel createLoan(LoanModel newLoan){
+    public void createLoan(LoanModel newLoan){
         repository.save(newLoan);
-        return newLoan;
     }
 
-    public LoanModel updateLoan(LoanModel attLoan){
+    public void updateLoan(LoanModel attLoan){
+        verifyLoanExist(attLoan.getId());
         repository.save(attLoan);
-        return attLoan;
     }
 
     public void deleteLoan(LoanModel delLoan){
@@ -36,6 +37,13 @@ public class LoanService {
     }
 
     public void deleteLoanById(long id){
+        verifyLoanExist(id);
         repository.deleteById(id);
+    }
+
+    private void verifyLoanExist(long id){
+        if (repository.findById(id) == null){
+            throw new NotFoundException("Loan not found for ID: "+id);
+        }
     }
 }

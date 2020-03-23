@@ -2,7 +2,9 @@ package br.com.phoebus.api.biblioteca.apirest.loan;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,53 +17,32 @@ public class LoanController {
     private LoanService service;
 
     @GetMapping
-    public ResponseEntity<List<LoanModel>> findAll(){
-        List<LoanModel> lend = service.findLend();
-        return ResponseEntity.ok().body(lend);
+    @ResponseStatus(HttpStatus.OK)
+    List<LoanModel> findAll(){
+        return service.findLend();
     }
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<LoanModel> getLoan(@PathVariable(value = "id") long id){
-        LoanModel loan = service.findLoanById(id);
-        if (loan == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(loan);
+    @ResponseStatus(HttpStatus.OK)
+    LoanModel getLoan(@PathVariable(value = "id") long id){
+        return service.findLoanById(id);
     }
 
     @PostMapping
-    ResponseEntity<LoanModel> postLoan(@RequestBody LoanModel newLoan){
+    @ResponseStatus(HttpStatus.CREATED)
+    void postLoan(@Validated @RequestBody LoanModel newLoan){
         service.createLoan(newLoan);
-        return ResponseEntity.ok().body(newLoan);
-    }
-
-    @DeleteMapping
-    ResponseEntity deleteLoan(@RequestBody LoanModel deleteLoan){
-        LoanModel delLoan = service.findLoanById(deleteLoan.getId());
-        if (delLoan == deleteLoan){
-            service.deleteLoan(deleteLoan);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/id")
-    ResponseEntity deleteLoanById(@PathVariable(value = "id")long id){
-        LoanModel delLoan = service.findLoanById(id);
-        if (delLoan == null){
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteLoanById(@PathVariable(value = "id")long id){
         service.deleteLoanById(id);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    ResponseEntity putLoan(@RequestBody LoanModel attLoan){
-        LoanModel loan = service.findLoanById(attLoan.getId());
-        if (loan == null){
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void putLoan(@Validated @RequestBody LoanModel attLoan){
         service.updateLoan(attLoan);
-        return ResponseEntity.ok().body(attLoan);
     }
 }

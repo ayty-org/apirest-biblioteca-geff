@@ -1,5 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
+import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ public class BookService {
     private final BookRepository repository;
 
     public BookModel findBookById(long id){
+        verifyBookExist(id);
         return repository.findById(id);
     }
 
@@ -26,6 +28,7 @@ public class BookService {
     }
 
     public BookModel updateBook(BookModel attBook){
+        verifyBookExist(attBook.getId());
         repository.save(attBook);
         return attBook;
     }
@@ -35,7 +38,14 @@ public class BookService {
     }
     //Ver ser o livro possui dependencias
     public void deleteBookById(long id){
+        verifyBookExist(id);
         repository.deleteById(id);
+    }
+
+    private void verifyBookExist(long id){
+        if (repository.findById(id) == null){
+            throw new NotFoundException("Book not found for ID: "+id);
+        }
     }
 
 

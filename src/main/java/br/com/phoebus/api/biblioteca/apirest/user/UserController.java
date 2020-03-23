@@ -1,8 +1,11 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
 
+import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,60 +18,36 @@ public class UserController {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<UserModel>> listUsers(){
-        List<UserModel> users = service.findUsers();
-
-        return ResponseEntity.ok().body(users);
+    @ResponseStatus(HttpStatus.OK)
+    List<UserModel> listUsers(){
+        return service.findUsers();
     }
 
-    // Retornar um ResponseEntity e dar um notFound caso userFound seja null
     // ok
     @GetMapping("/{id}")
-    public ResponseEntity<UserModel> getUser(@PathVariable(value = "id") long id){
-        UserModel userFound = service.findUserById(id);
-        if (userFound == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(userFound);
+    @ResponseStatus(HttpStatus.OK)
+    UserModel getUser(@PathVariable(value = "id") long id){
+        return service.findUserById(id);
     }
 
-    //retornar um ResponseEntity
     //ok
     @PostMapping
-    public ResponseEntity<UserModel> postUser(@RequestBody UserModel newUser){
+    @ResponseStatus(HttpStatus.CREATED)
+    void postUser(@Validated  @RequestBody UserModel newUser){
         service.createUser(newUser);
-        return ResponseEntity.ok().body(newUser);
     }
 
-    //retornar um ResponseEntity
-    @DeleteMapping
-    public ResponseEntity deleteUser(@RequestBody UserModel deleteUser){
-        UserModel delUser = service.findUserById(deleteUser.getId()); //Não achei um metodo pronto que procurasse o User pelo User passado como parametro
-        if (delUser == deleteUser){
-            service.deleteUser(deleteUser);
-            return ResponseEntity.ok().build(); //Devo usar o build()??
-        }
-        return ResponseEntity.badRequest().build(); //Aqui tbm?
-    }
-    //retornar um ResponseEntity
+
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUserById(@PathVariable(value = "id") long id){
-        UserModel delUser = service.findUserById(id);
-        if (delUser == null){
-            return ResponseEntity.badRequest().build(); //Aqui tbm?
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteUserById(@PathVariable(value = "id") long id){
         service.deleteUserById(id);
-        return ResponseEntity.ok().build(); //Aqui tbm?
+    }
 
-    }
-    //retornar um ResponseEntity
     @PutMapping
-    public ResponseEntity<UserModel> putUser(@RequestBody UserModel attUser){
-        UserModel user = service.findUserById(attUser.getId());
-        if (user == null){
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void putUser(@Validated @RequestBody UserModel attUser){
         service.updateUser(attUser);
-        return ResponseEntity.ok().body(attUser);
     }
+
 }
