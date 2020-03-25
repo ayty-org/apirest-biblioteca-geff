@@ -6,6 +6,7 @@ import br.com.phoebus.api.biblioteca.apirest.user.UserModel;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="loan")
@@ -20,11 +21,15 @@ public class LoanModel implements Serializable {
 
     private String loanTime;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserModel user;
 
-    @OneToMany
-    private List<BookModel> books;
+    @ManyToMany
+    @JoinTable(name = "lend_book",
+            joinColumns = @JoinColumn(name = "loan_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    Set<BookModel> booksLends;
 
     public long getId() {
         return id;
@@ -40,14 +45,6 @@ public class LoanModel implements Serializable {
 
     public void setUser(UserModel user) {
         this.user = user;
-    }
-
-    public List<BookModel> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<BookModel> books) {
-        this.books = books;
     }
 
     public String getLoanTime() {

@@ -5,6 +5,7 @@ import br.com.phoebus.api.biblioteca.apirest.loan.LoanModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name="userapp")
@@ -22,8 +23,8 @@ public class UserModel implements Serializable {
 
     private String telephone;
 
-    @OneToOne
-    private LoanModel loan;
+    @OneToMany(mappedBy = "user")
+    private Set<LoanModel> lend;
 
     public long getId() {
         return id;
@@ -57,11 +58,4 @@ public class UserModel implements Serializable {
         this.telephone = telephone;
     }
 
-    public LoanModel getLoan() {
-        return loan;
-    }
-
-    public void setLoan(LoanModel loan) {
-        this.loan = loan;
-    }
 }
