@@ -1,14 +1,16 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
 
+import br.com.phoebus.api.biblioteca.apirest.book.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/book")
 public class BookController {
@@ -17,20 +19,18 @@ public class BookController {
     BookService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    List<BookModel> listBooks(){
+    List<Book> listBooks(){
         return service.findBooks();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    BookModel getBook(@PathVariable(value = "id") long id){
+    Book getBook(@PathVariable(value = "id") long id){
         return service.findBookById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void postBook(@Validated @RequestBody BookModel newBook){
+    void postBook(@Validated @RequestBody Book newBook){
         service.createBook(newBook);
     }
 
@@ -42,7 +42,7 @@ public class BookController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void putBook(@Validated @RequestBody BookModel attBook){
+    void putBook(@Validated @PathVariable(value = "id")long id, @RequestBody Book attBook){
         service.updateBook(attBook);
     }
 }

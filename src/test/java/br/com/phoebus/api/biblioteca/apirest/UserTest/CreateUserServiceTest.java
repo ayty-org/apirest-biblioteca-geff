@@ -1,9 +1,9 @@
 package br.com.phoebus.api.biblioteca.apirest.UserTest;
 
 import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
-import br.com.phoebus.api.biblioteca.apirest.user.UserModel;
+import br.com.phoebus.api.biblioteca.apirest.user.UserApp;
 import br.com.phoebus.api.biblioteca.apirest.user.UserRepository;
-import br.com.phoebus.api.biblioteca.apirest.user.UserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -21,7 +21,7 @@ public class CreateUserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private UserModel user;
+    private UserApp user;
 
     private UserService service;
 
