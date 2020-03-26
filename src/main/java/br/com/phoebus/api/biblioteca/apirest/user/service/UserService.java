@@ -1,10 +1,10 @@
-package br.com.phoebus.api.biblioteca.apirest.user;
+package br.com.phoebus.api.biblioteca.apirest.user.service;
 
 
 import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
-import lombok.AllArgsConstructor;
+import br.com.phoebus.api.biblioteca.apirest.user.UserApp;
+import br.com.phoebus.api.biblioteca.apirest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,25 +15,25 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public UserModel findUserById(long id){
+    public UserApp findUserById(long id){
         verifyUserExist(id);
         return repository.findById(id);
     }
 
-    public List<UserModel> findUsers(){
+    public List<UserApp> findUsers(){
         return repository.findAll();
     }
 
-    public void createUser(UserModel newUser){
+    public void createUser(UserApp newUser){
         repository.save(newUser);
     }
 
-    public void updateUser(UserModel attUser){
+    public void updateUser(UserApp attUser){
         verifyUserExist(attUser.getId());
         repository.save(attUser);
     }
 
-    /*public void deleteUser(UserModel delUser){
+    /*public void deleteUser(UserApp delUser){
         repository.delete(delUser);
     }*/
 

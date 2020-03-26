@@ -1,9 +1,10 @@
-package br.com.phoebus.api.biblioteca.apirest.loan;
+package br.com.phoebus.api.biblioteca.apirest.loan.service;
 
 
 import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
+import br.com.phoebus.api.biblioteca.apirest.loan.Loan;
+import br.com.phoebus.api.biblioteca.apirest.loan.LoanRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,25 +15,25 @@ public class LoanService {
 
     private final LoanRepository repository;
 
-    public LoanModel findLoanById(long id){
+    public Loan findLoanById(long id){
         verifyLoanExist(id);
         return repository.findById(id);
     }
 
-    public List<LoanModel> findLend(){
+    public List<Loan> findLend(){
         return repository.findAll();
     }
 
-    public void createLoan(LoanModel newLoan){
+    public void createLoan(Loan newLoan){
         repository.save(newLoan);
     }
 
-    public void updateLoan(LoanModel attLoan){
+    public void updateLoan(Loan attLoan){
         verifyLoanExist(attLoan.getId());
         repository.save(attLoan);
     }
 
-    public void deleteLoan(LoanModel delLoan){
+    public void deleteLoan(Loan delLoan){
         repository.delete(delLoan);
     }
 
