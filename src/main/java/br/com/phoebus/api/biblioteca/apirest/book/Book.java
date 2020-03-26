@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,10 +33,10 @@ public class Book implements Serializable {
 
     private String year;
 
-    @ManyToOne
-    private Loan loan;
+    @ManyToMany(mappedBy = "booksLends")
+    Set<Loan> lend;
 
-    public Book(String title, String resume, String isbn, String author, String year) {
+    /*public Book(String title, String resume, String isbn, String author, String year) {
         this.title = title;
         this.resume = resume;
         this.isbn = isbn;
@@ -50,5 +51,5 @@ public class Book implements Serializable {
         this.isbn = isbn;
         this.author = author;
         this.year = year;
-    }
+    }*/
 }

@@ -25,13 +25,13 @@ public class BookDTO implements Serializable {
 
     private String year;
 
-    public BookDTO(Book book) {
+    /*public BookDTO(Book book) {
         this.id = book.getId();
         this.title = book.getTitle();
         this.resume = book.getResume();
         this.isbn = book.getIsbn();
         this.author = book.getAuthor();
-    }
+    }*/
 
     public static BookDTO from(Book book){
         return BookDTO.builder()

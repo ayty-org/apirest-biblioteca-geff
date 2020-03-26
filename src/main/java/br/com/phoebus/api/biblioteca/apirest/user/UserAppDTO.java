@@ -19,12 +19,12 @@ public class UserAppDTO {
 
     private String telephone;
 
-    public UserAppDTO(UserApp userApp){
+    /*public UserAppDTO(UserApp userApp){
         this.id = userApp.getId();
         this.age = userApp.getAge();
         this.name = userApp.getName();
         this.telephone = userApp.getTelephone();
-    }
+    }*/
 
     public static UserAppDTO from(UserApp userApp){
         return UserAppDTO.builder()

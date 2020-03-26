@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,10 +27,14 @@ public class Loan implements Serializable {
 
     private String loanTime;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserApp user;
 
-    @OneToMany
-    private List<Book> books;
+    @ManyToMany
+    @JoinTable(name = "lend_book",
+            joinColumns = @JoinColumn(name = "loan_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    Set<Book> booksLends;
 
 }

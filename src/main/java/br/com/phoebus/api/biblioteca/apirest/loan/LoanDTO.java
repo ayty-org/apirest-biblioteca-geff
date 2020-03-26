@@ -16,10 +16,10 @@ public class LoanDTO {
 
     private String loanTime;
 
-    public LoanDTO(Loan loan){
+    /*public LoanDTO(Loan loan){
         this.id = loan.getId();
         this.loanTime = loan.getLoanTime();
-    }
+    }*/
 
     public static LoanDTO from(Loan loan){
         return LoanDTO.builder()

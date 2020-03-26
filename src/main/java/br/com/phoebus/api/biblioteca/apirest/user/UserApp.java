@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -28,7 +29,7 @@ public class UserApp implements Serializable {
 
     private String telephone;
 
-    @OneToOne
-    private Loan loan;
+    @OneToMany(mappedBy = "user")
+    private Set<Loan> lend;
 
 }
