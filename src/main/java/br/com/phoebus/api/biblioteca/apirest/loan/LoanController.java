@@ -1,9 +1,8 @@
 package br.com.phoebus.api.biblioteca.apirest.loan;
 
 
-import br.com.phoebus.api.biblioteca.apirest.loan.service.LoanService;
+import br.com.phoebus.api.biblioteca.apirest.loan.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,34 +14,37 @@ import java.util.List;
 @RequestMapping(value = "/loan")
 public class LoanController {
 
-    @Autowired
-    private LoanService service;
-
-    @GetMapping
-    List<Loan> findAll(){
-        return service.findLend();
-    }
-
-    @GetMapping(value = "/{id}")
-    Loan getLoan(@PathVariable(value = "id") long id){
-        return service.findLoanById(id);
-    }
+    private final CreateLoan createLoan;
+    private final DeleteLoan deleteLoan;
+    private final GetAllLend getAllLend;
+    private final GetLoan getLoan;
+    private final UpdateLoan updateLoan;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     void postLoan(@Validated @RequestBody Loan newLoan){
-        service.createLoan(newLoan);
+        createLoan.create(newLoan);
     }
 
     @DeleteMapping("/id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteLoanById(@PathVariable(value = "id")long id){
-        service.deleteLoanById(id);
+        deleteLoan.delete(id);
+    }
+
+    @GetMapping
+    List<Loan> findAll(){
+        return getAllLend.getAllLend();
+    }
+
+    @GetMapping(value = "/{id}")
+    Loan getLoan(@PathVariable(value = "id") long id){
+        return getLoan.getLoan(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void putLoan(@Validated @PathVariable(value = "id")long id, @RequestBody Loan attLoan){
-        service.updateLoan(attLoan);
+    void putLoan(@Validated @PathVariable(value = "id")long id, @RequestBody LoanDTO attLoanDTO){
+        updateLoan.update(id, attLoanDTO);
     }
 }
