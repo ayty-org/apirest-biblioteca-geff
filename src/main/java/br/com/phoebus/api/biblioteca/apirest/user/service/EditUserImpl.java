@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class UpdateUserImpl implements UpdateUser {
+public class EditUserImpl implements EditUser {
 
     private final UserRepository repository;
 
     @Override
-    public void update(Long id, UserAppDTO userAppDTO) {
+    public void edit(Long id, UserAppDTO userAppDTO) {
         if (id == userAppDTO.getId()){
             UserApp attUser = UserAppDTO.to(userAppDTO);
             repository.save(attUser);

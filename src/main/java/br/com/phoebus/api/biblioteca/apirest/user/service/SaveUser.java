@@ -1,9 +1,10 @@
 package br.com.phoebus.api.biblioteca.apirest.user.service;
 
+
 import br.com.phoebus.api.biblioteca.apirest.user.UserAppDTO;
 
 @FunctionalInterface
-public interface GetUser {
+public interface SaveUser {
 
-    UserAppDTO getUser(Long id);
+    void save(UserAppDTO userAppDTO);
 }

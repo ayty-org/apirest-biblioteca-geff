@@ -1,12 +1,14 @@
 package br.com.phoebus.api.biblioteca.apirest.loan;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(builderClassName = "Builder")
 public class LoanDTO {
 
@@ -14,6 +16,7 @@ public class LoanDTO {
 
     private long id;
 
+    @NotEmpty(message = "Loan time may not be empty")
     private String loanTime;
 
     /*public LoanDTO(Loan loan){

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class UpdateLoanImpl implements UpdateLoan{
+public class EditLoanImpl implements EditLoan {
 
     private final LoanRepository repository;
     @Override
-    public void update(Long id, LoanDTO loanDTO) {
+    public void edit(Long id, LoanDTO loanDTO) {
         if (id == loanDTO.getId()){
             Loan attLoan = LoanDTO.to(loanDTO);
             repository.save(attLoan);

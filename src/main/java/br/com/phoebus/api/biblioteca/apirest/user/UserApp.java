@@ -2,9 +2,7 @@ package br.com.phoebus.api.biblioteca.apirest.user;
 
 
 import br.com.phoebus.api.biblioteca.apirest.loan.Loan;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +11,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="userapp")
 @Builder(builderClassName = "Builder")
 public class UserApp implements Serializable {

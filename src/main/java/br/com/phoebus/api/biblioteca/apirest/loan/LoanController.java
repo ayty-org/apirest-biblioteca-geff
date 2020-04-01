@@ -14,16 +14,16 @@ import java.util.List;
 @RequestMapping(value = "/loan")
 public class LoanController {
 
-    private final CreateLoan createLoan;
+    private final SaveLoan saveLoan;
     private final DeleteLoan deleteLoan;
-    private final GetAllLend getAllLend;
+    private final ListLend listLend;
     private final GetLoan getLoan;
-    private final UpdateLoan updateLoan;
+    private final EditLoan editLoan;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void postLoan(@Validated @RequestBody Loan newLoan){
-        createLoan.create(newLoan);
+    void postLoan(@Validated @RequestBody LoanDTO newLoanDTO){
+        saveLoan.save(newLoanDTO);
     }
 
     @DeleteMapping("/id")
@@ -33,18 +33,18 @@ public class LoanController {
     }
 
     @GetMapping
-    List<Loan> findAll(){
-        return getAllLend.getAllLend();
+    List<LoanDTO> findAll(){
+        return listLend.listLend();
     }
 
     @GetMapping(value = "/{id}")
-    Loan getLoan(@PathVariable(value = "id") long id){
+    LoanDTO getLoan(@PathVariable(value = "id") long id){
         return getLoan.getLoan(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void putLoan(@Validated @PathVariable(value = "id")long id, @RequestBody LoanDTO attLoanDTO){
-        updateLoan.update(id, attLoanDTO);
+        editLoan.edit(id, attLoanDTO);
     }
 }

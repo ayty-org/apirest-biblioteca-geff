@@ -2,8 +2,10 @@ package br.com.phoebus.api.biblioteca.apirest.loan.service;
 
 import br.com.phoebus.api.biblioteca.apirest.loan.LoanDTO;
 
-@FunctionalInterface
-public interface GetLoan {
+import java.util.List;
 
-    LoanDTO getLoan(Long id);
+@FunctionalInterface
+public interface ListLend {
+
+    List<LoanDTO> listLend();
 }

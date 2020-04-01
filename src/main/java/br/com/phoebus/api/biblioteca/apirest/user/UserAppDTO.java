@@ -1,11 +1,15 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(builderClassName = "Builder")
 public class UserAppDTO {
 
@@ -13,10 +17,15 @@ public class UserAppDTO {
 
     private long id;
 
+    @NotEmpty(message = "Name may not be empty")
+    @Size(min = 2)
     private String name;
 
+    @Min(3)
     private int age;
 
+    @NotEmpty(message = "Telephone may not be empty")
+    @Size(min = 8)
     private String telephone;
 
     /*public UserAppDTO(UserApp userApp){

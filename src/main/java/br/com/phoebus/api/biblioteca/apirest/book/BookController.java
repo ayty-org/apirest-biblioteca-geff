@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -14,16 +15,16 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
 
-    private final CreateBook createBook;
+    private final SaveBook saveBook;
     private final DeleteBook deleteBook;
-    private final GetAllBooks getAllBooks;
+    private final ListBooks listBooks;
     private final GetBook getBook;
-    private final UpdateBook updateBook;
+    private final EditBook editBook;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void postBook(@Validated @RequestBody Book newBook){
-        createBook.create(newBook);
+    void postBook(@Valid @RequestBody BookDTO newBookDTO){
+        saveBook.save(newBookDTO);
     }
 
     //Falar com kawe sobre o metodo delete do repository não ter orElseTrow
@@ -34,12 +35,12 @@ public class BookController {
     }
 
     @GetMapping
-    List<Book> listBooks(){
-        return getAllBooks.getAllBooks();
+    List<BookDTO> listBooks(){
+        return listBooks.listBooks();
     }
 
     @GetMapping("/{id}")
-    Book getBook(@PathVariable(value = "id") long id){
+    BookDTO getBook(@PathVariable(value = "id") long id){
         return getBook.find(id);
     }
 
@@ -48,6 +49,6 @@ public class BookController {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void putBook(@Validated @PathVariable(value = "id")long id, @RequestBody BookDTO attBook){
-        updateBook.update(id, attBook);
+        editBook.edit(id, attBook);
     }
 }

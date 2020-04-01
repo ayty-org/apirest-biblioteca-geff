@@ -3,7 +3,6 @@ package br.com.phoebus.api.biblioteca.apirest.UserTest;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.NotFoundException;
 import br.com.phoebus.api.biblioteca.apirest.user.UserApp;
 import br.com.phoebus.api.biblioteca.apirest.user.UserRepository;
-import br.com.phoebus.api.biblioteca.apirest.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,12 +22,12 @@ public class CreateUserServiceTest {
     @Mock
     private UserApp user;
 
-    private UserService service;
+    //private UserService service;
 
-    @BeforeEach
+    /*@BeforeEach
     void setUp(){
         this.service = new UserService(userRepository);
-    }
+    }*/
 
     @Test
     @DisplayName("Deve criar um user")

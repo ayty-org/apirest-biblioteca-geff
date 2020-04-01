@@ -1,13 +1,15 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(builderClassName = "Builder")
 public class BookDTO implements Serializable {
 
@@ -15,14 +17,20 @@ public class BookDTO implements Serializable {
 
     private long id;
 
+    @NotEmpty(message = "Title may not be empty")
     private String title;
 
+    @NotEmpty(message = "Resume may not be empty")
+    @Size(max = 500)
     private String resume;
 
+    @NotEmpty(message = "ISBN may not be empty")
     private String isbn;
 
+    @NotEmpty(message = "Author may not be empty")
     private String author;
 
+    @NotEmpty(message = "Year may not be empty")
     private String year;
 
     /*public BookDTO(Book book) {

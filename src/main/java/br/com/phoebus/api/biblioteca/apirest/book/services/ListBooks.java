@@ -1,10 +1,11 @@
 package br.com.phoebus.api.biblioteca.apirest.book.services;
 
-
 import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 
-@FunctionalInterface
-public interface GetBook {
+import java.util.List;
 
-    BookDTO find(Long id);
+@FunctionalInterface
+public interface ListBooks {
+
+    List<BookDTO> listBooks();
 }

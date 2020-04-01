@@ -3,7 +3,7 @@ package br.com.phoebus.api.biblioteca.apirest.book.services;
 import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 
 @FunctionalInterface
-public interface UpdateBook {
+public interface EditBook {
 
-    void update(Long id, BookDTO bookDTO);
+    void edit(Long id, BookDTO bookDTO);
 }

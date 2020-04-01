@@ -3,23 +3,26 @@ package br.com.phoebus.api.biblioteca.apirest.book.services;
 import br.com.phoebus.api.biblioteca.apirest.book.Book;
 import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 import br.com.phoebus.api.biblioteca.apirest.book.BookRepository;
-import br.com.phoebus.api.biblioteca.apirest.exceptions.BookInconsistencyInDataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
-public class UpdateBookImpl implements UpdateBook{
+public class ListBooksImpl implements ListBooks {
 
     private final BookRepository repository;
 
     @Override
-    public void update(Long id, BookDTO bookDTO) {
-        if (id == bookDTO.getId()) {
-            Book attBook = BookDTO.to(bookDTO);
-            repository.save(attBook);
-            return;
+    public List<BookDTO> listBooks() {
+        List<Book> books= repository.findAll();
+        List<BookDTO> booksDTO = new ArrayList<BookDTO>() {
+        };
+        for (Book book: books) {
+            booksDTO.add(BookDTO.from(book));
         }
-        throw new BookInconsistencyInDataException();
+        return booksDTO;
     }
 }

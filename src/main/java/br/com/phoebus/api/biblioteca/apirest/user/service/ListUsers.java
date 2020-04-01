@@ -2,8 +2,10 @@ package br.com.phoebus.api.biblioteca.apirest.user.service;
 
 import br.com.phoebus.api.biblioteca.apirest.user.UserAppDTO;
 
-@FunctionalInterface
-public interface UpdateUser {
+import java.util.List;
 
-    void update(Long id, UserAppDTO userAppDTO);
+@FunctionalInterface
+public interface ListUsers {
+
+    List<UserAppDTO> listUsers();
 }

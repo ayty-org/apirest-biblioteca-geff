@@ -1,9 +1,7 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
 import br.com.phoebus.api.biblioteca.apirest.loan.Loan;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +10,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="book")
 @Builder(builderClassName = "Builder")
 public class Book implements Serializable {
