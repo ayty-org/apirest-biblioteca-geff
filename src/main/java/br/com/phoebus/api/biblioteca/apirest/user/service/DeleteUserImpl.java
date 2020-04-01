@@ -1,5 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.user.service;
 
+import br.com.phoebus.api.biblioteca.apirest.exceptions.UserNotFoundException;
 import br.com.phoebus.api.biblioteca.apirest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,10 @@ public class DeleteUserImpl implements DeleteUser {
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        try{
+            repository.deleteById(id);
+        }catch (UserNotFoundException e){
+            throw new UserNotFoundException();
+        }
     }
 }
