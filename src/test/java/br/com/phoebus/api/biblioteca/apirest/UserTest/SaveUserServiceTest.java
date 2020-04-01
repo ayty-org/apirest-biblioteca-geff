@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @Tag("Service")
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Valida o serviço de criar um User")
-public class CreateUserServiceTest {
+public class SaveUserServiceTest {
 
     @Mock
     private UserRepository userRepository;
