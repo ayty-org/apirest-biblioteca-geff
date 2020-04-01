@@ -1,7 +1,7 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
 
-import br.com.phoebus.api.biblioteca.apirest.user.service.UserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,38 +15,39 @@ import java.util.List;
 @RequestMapping(value = "/user")
 public class UserController {
 
-    @Autowired
-    private UserService service;
+    private final CreateUser createUser;
+    private final DeleteUser deleteUser;
+    private final GetAllUsers getAllUsers;
+    private final GetUser getUser;
+    private final UpdateUser updateUser;
 
-    @GetMapping
-    List<UserApp> listUsers(){
-        return service.findUsers();
-    }
-
-    // ok
-    @GetMapping("/{id}")
-    UserApp getUser(@PathVariable(value = "id") long id){
-        return service.findUserById(id);
-    }
-
-    //ok
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     void postUser(@Validated  @RequestBody UserApp newUser){
-        service.createUser(newUser);
+        createUser.create(newUser);
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserById(@PathVariable(value = "id") long id){
-        service.deleteUserById(id);
+        deleteUser.delete(id);
+    }
+
+
+    @GetMapping
+    List<UserApp> listUsers(){
+        return getAllUsers.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    UserApp getUser(@PathVariable(value = "id") long id){
+        return getUser.getUser(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void putUser(@Validated @PathVariable(value = "id") long id, @RequestBody UserApp attUser){
-        service.updateUser(attUser);
+    void putUser(@Validated @PathVariable(value = "id") long id, @RequestBody UserAppDTO attUserDTO){
+        updateUser.update(id, attUserDTO);
     }
 
 }
