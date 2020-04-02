@@ -4,9 +4,9 @@ package br.com.phoebus.api.biblioteca.apirest.loan;
 import br.com.phoebus.api.biblioteca.apirest.loan.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class LoanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void postLoan(@Validated @RequestBody LoanDTO newLoanDTO){
+    void postLoan(@Valid @RequestBody LoanDTO newLoanDTO){
         saveLoan.save(newLoanDTO);
     }
 
@@ -44,7 +44,7 @@ public class LoanController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void putLoan(@Validated @PathVariable(value = "id")long id, @RequestBody LoanDTO attLoanDTO){
+    void putLoan(@Valid @PathVariable(value = "id")long id, @RequestBody LoanDTO attLoanDTO){
         editLoan.edit(id, attLoanDTO);
     }
 }

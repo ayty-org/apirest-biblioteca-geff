@@ -4,9 +4,9 @@ package br.com.phoebus.api.biblioteca.apirest.user;
 import br.com.phoebus.api.biblioteca.apirest.user.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void postUser(@Validated  @RequestBody UserAppDTO newUserDTO){
+    void postUser(@Valid  @RequestBody UserAppDTO newUserDTO){
         saveUser.save(newUserDTO);
     }
 
@@ -45,7 +45,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void putUser(@Validated @PathVariable(value = "id") long id, @RequestBody UserAppDTO attUserDTO){
+    void putUser(@Valid @PathVariable(value = "id") long id, @RequestBody UserAppDTO attUserDTO){
         editUser.edit(id, attUserDTO);
     }
 

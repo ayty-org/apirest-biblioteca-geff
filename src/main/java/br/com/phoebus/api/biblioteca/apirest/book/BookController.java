@@ -4,7 +4,6 @@ package br.com.phoebus.api.biblioteca.apirest.book;
 import br.com.phoebus.api.biblioteca.apirest.book.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,7 +47,7 @@ public class BookController {
     //Verificar se estou usando certo o DTO aqui
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void putBook(@Validated @PathVariable(value = "id")long id, @RequestBody BookDTO attBook){
+    void putBook(@Valid @PathVariable(value = "id")long id, @RequestBody BookDTO attBook){
         editBook.edit(id, attBook);
     }
 }
