@@ -13,10 +13,9 @@ public class DeleteUserImpl implements DeleteUser {
 
     @Override
     public void delete(Long id) {
-        try{
-            repository.deleteById(id);
-        }catch (UserNotFoundException e){
+        if (!repository.existsById(id)) {
             throw new UserNotFoundException();
         }
+        repository.deleteById(id);
     }
 }

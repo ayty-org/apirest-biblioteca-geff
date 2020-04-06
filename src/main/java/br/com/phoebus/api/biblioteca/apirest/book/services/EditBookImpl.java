@@ -15,11 +15,14 @@ public class EditBookImpl implements EditBook {
 
     @Override
     public void edit(Long id, BookDTO bookDTO) {
-        if (id == bookDTO.getId()) {
-            Book attBook = BookDTO.to(bookDTO);
-            repository.save(attBook);
-            return;
-        }
-        throw new BookInconsistencyInDataException();
+        Book book = repository.findById(id).orElseThrow(BookInconsistencyInDataException::new);
+
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setResume(bookDTO.getResume());
+        book.setTitle(bookDTO.getTitle());
+        book.setYear(bookDTO.getYear());
+
+        repository.save(book);
     }
 }

@@ -1,6 +1,7 @@
-package br.com.phoebus.api.biblioteca.apirest.user;
+package br.com.phoebus.api.biblioteca.apirest.user.v1;
 
 
+import br.com.phoebus.api.biblioteca.apirest.user.UserAppDTO;
 import br.com.phoebus.api.biblioteca.apirest.user.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "v1/user")
 public class UserController {
 
     private final SaveUser saveUser;

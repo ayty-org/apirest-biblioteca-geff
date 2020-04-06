@@ -1,6 +1,7 @@
-package br.com.phoebus.api.biblioteca.apirest.loan;
+package br.com.phoebus.api.biblioteca.apirest.loan.v1;
 
 
+import br.com.phoebus.api.biblioteca.apirest.loan.LoanDTO;
 import br.com.phoebus.api.biblioteca.apirest.loan.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/loan")
+@RequestMapping(value = "v1/loan")
 public class LoanController {
 
     private final SaveLoan saveLoan;

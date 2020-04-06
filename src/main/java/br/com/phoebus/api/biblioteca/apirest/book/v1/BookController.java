@@ -1,6 +1,7 @@
-package br.com.phoebus.api.biblioteca.apirest.book;
+package br.com.phoebus.api.biblioteca.apirest.book.v1;
 
 
+import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 import br.com.phoebus.api.biblioteca.apirest.book.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/book")
+@RequestMapping("v1/book")
 public class BookController {
 
     private final SaveBook saveBook;

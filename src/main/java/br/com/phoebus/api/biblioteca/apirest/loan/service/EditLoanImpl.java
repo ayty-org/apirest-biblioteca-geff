@@ -1,6 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.loan.service;
 
-import br.com.phoebus.api.biblioteca.apirest.exceptions.LoanInconsistencyInDataException;
+import br.com.phoebus.api.biblioteca.apirest.exceptions.LoanNotFoundException;
 import br.com.phoebus.api.biblioteca.apirest.loan.Loan;
 import br.com.phoebus.api.biblioteca.apirest.loan.LoanDTO;
 import br.com.phoebus.api.biblioteca.apirest.loan.LoanRepository;
@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 public class EditLoanImpl implements EditLoan {
 
     private final LoanRepository repository;
+
     @Override
     public void edit(Long id, LoanDTO loanDTO) {
-        if (id == loanDTO.getId()){
-            Loan attLoan = LoanDTO.to(loanDTO);
-            repository.save(attLoan);
-            return;
-        }
-        throw new LoanInconsistencyInDataException();
+        Loan loan = repository.findById(id).orElseThrow(LoanNotFoundException::new);
+
+        loan.setLoanTime(loanDTO.getLoanTime());
+
+        repository.save(loan);
+
     }
 }

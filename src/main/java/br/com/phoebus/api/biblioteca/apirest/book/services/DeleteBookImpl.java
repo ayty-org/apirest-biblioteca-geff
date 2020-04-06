@@ -13,10 +13,9 @@ public class DeleteBookImpl implements DeleteBook {
 
     @Override
     public void delete(Long id) {
-        try{
-            repository.deleteById(id);
-        }catch (BookNotFoundException e){
+        if (!repository.existsById(id)) {
             throw new BookNotFoundException();
         }
+        repository.deleteById(id);
     }
 }
