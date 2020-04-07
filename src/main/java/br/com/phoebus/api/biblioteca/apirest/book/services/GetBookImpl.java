@@ -1,6 +1,5 @@
 package br.com.phoebus.api.biblioteca.apirest.book.services;
 
-import br.com.phoebus.api.biblioteca.apirest.book.Book;
 import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 import br.com.phoebus.api.biblioteca.apirest.book.BookRepository;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.BookNotFoundException;

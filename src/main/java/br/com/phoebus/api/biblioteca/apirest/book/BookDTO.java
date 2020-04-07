@@ -15,7 +15,7 @@ public class BookDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "Title may not be empty")
     private String title;
@@ -33,14 +33,6 @@ public class BookDTO implements Serializable {
     @NotEmpty(message = "Year may not be empty")
     private String year;
 
-    /*public BookDTO(Book book) {
-        this.id = book.getId();
-        this.title = book.getTitle();
-        this.resume = book.getResume();
-        this.isbn = book.getIsbn();
-        this.author = book.getAuthor();
-    }*/
-
     public static BookDTO from(Book book){
         return BookDTO.builder()
                 .id(book.getId())
@@ -49,17 +41,6 @@ public class BookDTO implements Serializable {
                 .isbn(book.getIsbn())
                 .author(book.getAuthor())
                 .year(book.getYear())
-                .build();
-    }
-
-    public static Book to(BookDTO bookDTO){
-        return Book.builder()
-                .id(bookDTO.getId())
-                .title(bookDTO.getTitle())
-                .resume(bookDTO.getResume())
-                .isbn(bookDTO.getIsbn())
-                .author(bookDTO.getAuthor())
-                .year(bookDTO.getYear())
                 .build();
     }
 }

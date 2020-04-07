@@ -15,6 +15,6 @@ public class SaveBookImpl implements SaveBook {
 
     @Override
     public void save(BookDTO newBookDTO) {
-        repository.save(BookDTO.to(newBookDTO));
+        repository.save(Book.to(newBookDTO));
     }
 }

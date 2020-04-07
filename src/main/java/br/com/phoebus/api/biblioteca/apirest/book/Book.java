@@ -21,7 +21,7 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "book_id")
-    private long id;
+    private Long id;
 
     private String title;
 
@@ -36,20 +36,14 @@ public class Book implements Serializable {
     @ManyToMany(mappedBy = "booksLends")
     Set<Loan> lend;
 
-    /*public Book(String title, String resume, String isbn, String author, String year) {
-        this.title = title;
-        this.resume = resume;
-        this.isbn = isbn;
-        this.author = author;
-        this.year = year;
+    public static Book to(BookDTO bookDTO){
+        return Book.builder()
+                .id(bookDTO.getId())
+                .title(bookDTO.getTitle())
+                .resume(bookDTO.getResume())
+                .isbn(bookDTO.getIsbn())
+                .author(bookDTO.getAuthor())
+                .year(bookDTO.getYear())
+                .build();
     }
-
-    public Book(Long id, String title, String resume, String isbn, String author, String year) {
-        this.id = id;
-        this.title = title;
-        this.resume = resume;
-        this.isbn = isbn;
-        this.author = author;
-        this.year = year;
-    }*/
 }
