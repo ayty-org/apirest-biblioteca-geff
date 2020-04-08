@@ -32,7 +32,6 @@ public class BookGetTest {
     private BookRepository repository;
 
     private GetBookImpl getBook;
-    private SaveBookImpl saveBook;
 
     @BeforeEach
     public void setUp() {
