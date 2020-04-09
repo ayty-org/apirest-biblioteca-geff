@@ -4,8 +4,8 @@ import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 
 public class BookDTOBuilder {
 
-    public static BookDTO.Builder createBookDTO(){
-         return BookDTO.builder()
+    public static BookDTO.Builder createBookDTO() {
+        return BookDTO.builder()
                 .year("2020")
                 .author("Gefferson")
                 .isbn("2215466-8")

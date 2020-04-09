@@ -1,6 +1,5 @@
 package br.com.phoebus.api.biblioteca.apirest.user.service;
 
-import br.com.phoebus.api.biblioteca.apirest.exceptions.UserInconsistencyInDataException;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.UserNotFoundException;
 import br.com.phoebus.api.biblioteca.apirest.user.UserApp;
 import br.com.phoebus.api.biblioteca.apirest.user.UserAppDTO;

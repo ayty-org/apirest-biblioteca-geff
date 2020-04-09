@@ -21,7 +21,10 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @Tag("Service")
@@ -65,16 +68,17 @@ public class BookEditTest {
         );
 
     }
+
     @Test
     @DisplayName("Deve lançar uma exceção")
-    void shouldBookIncosistencyInDataException(){
+    void shouldBookIncosistencyInDataException() {
         BookDTO bookDTO = createBookDTO()
                 .author("Author Edit")
                 .title("Title Edit")
                 .resume("Resume Edit").build();
         when(repository.findById(anyLong())).thenThrow(new BookInconsistencyInDataException());
 
-        assertThrows(BookInconsistencyInDataException.class, ()-> editBook.edit(1L, bookDTO));
+        assertThrows(BookInconsistencyInDataException.class, () -> editBook.edit(1L, bookDTO));
         verify(repository, times(0)).save(any());
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class LoanInconsistencyInDataException extends RuntimeException {
-    public LoanInconsistencyInDataException(){
+    public LoanInconsistencyInDataException() {
         super("Inconsistency in loan data");
     }
 }

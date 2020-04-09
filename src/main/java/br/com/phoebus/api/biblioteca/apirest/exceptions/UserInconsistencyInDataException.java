@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class UserInconsistencyInDataException extends RuntimeException {
-    public UserInconsistencyInDataException(){
+    public UserInconsistencyInDataException() {
         super("inconsistency in user data");
     }
 }

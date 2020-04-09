@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BookInconsistencyInDataException extends RuntimeException {
-    public BookInconsistencyInDataException(){
+    public BookInconsistencyInDataException() {
         super("Inconsistency in book data");
     }
 }

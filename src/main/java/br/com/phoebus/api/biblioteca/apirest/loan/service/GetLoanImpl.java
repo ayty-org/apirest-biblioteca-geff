@@ -1,7 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.loan.service;
 
 import br.com.phoebus.api.biblioteca.apirest.exceptions.LoanNotFoundException;
-import br.com.phoebus.api.biblioteca.apirest.loan.Loan;
 import br.com.phoebus.api.biblioteca.apirest.loan.LoanDTO;
 import br.com.phoebus.api.biblioteca.apirest.loan.LoanRepository;
 import lombok.RequiredArgsConstructor;

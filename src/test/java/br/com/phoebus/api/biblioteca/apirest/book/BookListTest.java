@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,13 +30,13 @@ public class BookListTest {
     private ListBooksImpl listBooks;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         this.listBooks = new ListBooksImpl(repository);
     }
 
     @Test
     @DisplayName("Deve listar todos os livros")
-    void shouldListBooks(){
+    void shouldListBooks() {
         Book book1 = createBook().title("Title List do Book 1").build();
         Book book2 = createBook().resume("Resume List do Book2").build();
         Book book3 = createBook().author("Author List do Book3").build();

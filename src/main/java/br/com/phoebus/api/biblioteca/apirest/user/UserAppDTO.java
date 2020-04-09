@@ -1,6 +1,10 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -28,14 +32,7 @@ public class UserAppDTO {
     @Size(min = 8)
     private String telephone;
 
-    /*public UserAppDTO(UserApp userApp){
-        this.id = userApp.getId();
-        this.age = userApp.getAge();
-        this.name = userApp.getName();
-        this.telephone = userApp.getTelephone();
-    }*/
-
-    public static UserAppDTO from(UserApp userApp){
+    public static UserAppDTO from(UserApp userApp) {
         return UserAppDTO.builder()
                 .id(userApp.getId())
                 .age(userApp.getAge())
@@ -44,7 +41,7 @@ public class UserAppDTO {
                 .build();
     }
 
-    public static UserApp to(UserAppDTO userAppDTO){
+    public static UserApp to(UserAppDTO userAppDTO) {
         return UserApp.builder()
                 .id(userAppDTO.getId())
                 .age(userAppDTO.getAge())
@@ -52,5 +49,4 @@ public class UserAppDTO {
                 .telephone(userAppDTO.getTelephone())
                 .build();
     }
-
 }

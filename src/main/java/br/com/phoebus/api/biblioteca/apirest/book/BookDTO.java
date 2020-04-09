@@ -1,6 +1,10 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -33,7 +37,7 @@ public class BookDTO implements Serializable {
     @NotEmpty(message = "Year may not be empty")
     private String year;
 
-    public static BookDTO from(Book book){
+    public static BookDTO from(Book book) {
         return BookDTO.builder()
                 .id(book.getId())
                 .title(book.getTitle())

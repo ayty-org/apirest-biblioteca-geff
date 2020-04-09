@@ -13,14 +13,14 @@ import java.util.List;
 @Service
 public class ListLendImpl implements ListLend {
 
-    private LoanRepository repository;
+    private final LoanRepository repository;
 
     @Override
     public List<LoanDTO> listLend() {
-        List<Loan> lend= repository.findAll();
+        List<Loan> lend = repository.findAll();
         List<LoanDTO> lendDTO = new ArrayList<LoanDTO>() {
         };
-        for (Loan loan: lend) {
+        for (Loan loan : lend) {
             lendDTO.add(LoanDTO.from(loan));
         }
         return lendDTO;

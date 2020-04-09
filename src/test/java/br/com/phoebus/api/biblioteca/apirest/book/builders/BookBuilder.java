@@ -4,7 +4,7 @@ import br.com.phoebus.api.biblioteca.apirest.book.Book;
 
 public class BookBuilder {
 
-    public static Book.Builder createBook(){
+    public static Book.Builder createBook() {
         return Book.builder()
                 .year("2020")
                 .author("Gefferson")

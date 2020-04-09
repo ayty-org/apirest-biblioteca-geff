@@ -13,13 +13,14 @@ import java.util.List;
 @Service
 public class ListUsersImpl implements ListUsers {
 
-    private UserRepository repository;
+    private final UserRepository repository;
+
     @Override
     public List<UserAppDTO> listUsers() {
-        List<UserApp> users= repository.findAll();
+        List<UserApp> users = repository.findAll();
         List<UserAppDTO> usersDTO = new ArrayList<UserAppDTO>() {
         };
-        for (UserApp user: users) {
+        for (UserApp user : users) {
             usersDTO.add(UserAppDTO.from(user));
         }
         return usersDTO;

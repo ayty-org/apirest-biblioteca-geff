@@ -1,7 +1,11 @@
 package br.com.phoebus.api.biblioteca.apirest.loan;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -19,19 +23,14 @@ public class LoanDTO {
     @NotEmpty(message = "Loan time may not be empty")
     private String loanTime;
 
-    /*public LoanDTO(Loan loan){
-        this.id = loan.getId();
-        this.loanTime = loan.getLoanTime();
-    }*/
-
-    public static LoanDTO from(Loan loan){
+    public static LoanDTO from(Loan loan) {
         return LoanDTO.builder()
                 .id(loan.getId())
                 .loanTime(loan.getLoanTime())
                 .build();
     }
 
-    public static Loan to(LoanDTO loanDTO){
+    public static Loan to(LoanDTO loanDTO) {
         return Loan.builder()
                 .id(loanDTO.getId())
                 .loanTime(loanDTO.getLoanTime())

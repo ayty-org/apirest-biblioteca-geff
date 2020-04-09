@@ -17,10 +17,10 @@ public class ListBooksImpl implements ListBooks {
 
     @Override
     public List<BookDTO> listBooks() {
-        List<Book> books= repository.findAll();
+        List<Book> books = repository.findAll();
         List<BookDTO> booksDTO = new ArrayList<BookDTO>() {
         };
-        for (Book book: books) {
+        for (Book book : books) {
             booksDTO.add(BookDTO.from(book));
         }
         return booksDTO;

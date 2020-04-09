@@ -3,7 +3,6 @@ package br.com.phoebus.api.biblioteca.apirest.book;
 
 import br.com.phoebus.api.biblioteca.apirest.book.builders.BookBuilder;
 import br.com.phoebus.api.biblioteca.apirest.book.services.GetBookImpl;
-import br.com.phoebus.api.biblioteca.apirest.book.services.SaveBookImpl;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.BookNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +64,7 @@ public class BookGetTest {
 
         when(repository.findById(anyLong())).thenThrow(new BookNotFoundException());
 
-        assertThrows(BookNotFoundException.class,()-> getBook.find(1L));
+        assertThrows(BookNotFoundException.class, () -> getBook.find(1L));
         // apenas para testar se foi chamado
         // verify(repository, times(1)).findById(1L);
     }
