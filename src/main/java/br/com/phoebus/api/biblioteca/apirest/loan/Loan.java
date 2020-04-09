@@ -35,7 +35,7 @@ public class Loan implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "loan_id")
-    private long id;
+    private Long id;
 
     private String loanTime;
 
@@ -49,4 +49,10 @@ public class Loan implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "book_id"))
     Set<Book> booksLends;
 
+    public static Loan to(LoanDTO loanDTO) {
+        return Loan.builder()
+                .id(loanDTO.getId())
+                .loanTime(loanDTO.getLoanTime())
+                .build();
+    }
 }

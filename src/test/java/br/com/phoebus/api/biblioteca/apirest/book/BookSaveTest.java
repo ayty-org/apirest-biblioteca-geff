@@ -53,6 +53,5 @@ public class BookSaveTest {
                 () -> assertThat(result.getTitle(), is(book.getTitle())),
                 () -> assertThat(result.getYear(), is(book.getYear()))
         );
-
     }
 }

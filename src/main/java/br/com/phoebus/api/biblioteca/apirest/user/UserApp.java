@@ -1,6 +1,5 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
-
 import br.com.phoebus.api.biblioteca.apirest.loan.Loan;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +30,7 @@ public class UserApp implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -42,4 +41,12 @@ public class UserApp implements Serializable {
     @OneToMany(mappedBy = "user")
     private Set<Loan> lend;
 
+    public static UserApp to(UserAppDTO userAppDTO) {
+        return UserApp.builder()
+                .id(userAppDTO.getId())
+                .telephone(userAppDTO.getTelephone())
+                .name(userAppDTO.getName())
+                .age(userAppDTO.getAge())
+                .build();
+    }
 }

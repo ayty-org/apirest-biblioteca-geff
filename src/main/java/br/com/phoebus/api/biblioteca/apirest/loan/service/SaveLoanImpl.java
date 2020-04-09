@@ -5,6 +5,8 @@ import br.com.phoebus.api.biblioteca.apirest.loan.LoanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static br.com.phoebus.api.biblioteca.apirest.loan.Loan.to;
+
 @RequiredArgsConstructor
 @Service
 public class SaveLoanImpl implements SaveLoan {
@@ -13,6 +15,6 @@ public class SaveLoanImpl implements SaveLoan {
 
     @Override
     public void save(LoanDTO newLoanDTO) {
-        repository.save(LoanDTO.to(newLoanDTO));
+        repository.save(to(newLoanDTO));
     }
 }

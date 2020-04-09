@@ -1,6 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.user.service;
 
-import br.com.phoebus.api.biblioteca.apirest.exceptions.UserNotFoundException;
+import br.com.phoebus.api.biblioteca.apirest.exceptions.UserInconsistencyInDataException;
 import br.com.phoebus.api.biblioteca.apirest.user.UserApp;
 import br.com.phoebus.api.biblioteca.apirest.user.UserAppDTO;
 import br.com.phoebus.api.biblioteca.apirest.user.UserRepository;
@@ -15,7 +15,7 @@ public class EditUserImpl implements EditUser {
 
     @Override
     public void edit(Long id, UserAppDTO userAppDTO) {
-        UserApp userApp = repository.findById(id).orElseThrow(UserNotFoundException::new);
+        UserApp userApp = repository.findById(id).orElseThrow(UserInconsistencyInDataException::new);
 
         userApp.setAge(userAppDTO.getAge());
         userApp.setName(userAppDTO.getName());

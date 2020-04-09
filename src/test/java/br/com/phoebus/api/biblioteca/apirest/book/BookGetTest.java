@@ -1,7 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
 
-import br.com.phoebus.api.biblioteca.apirest.book.builders.BookBuilder;
 import br.com.phoebus.api.biblioteca.apirest.book.services.GetBookImpl;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.BookNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static br.com.phoebus.api.biblioteca.apirest.book.builders.BookBuilder.createBook;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -42,9 +42,9 @@ public class BookGetTest {
     @DisplayName("Deve retornar um livro")
     void shouldFindBook() {
 
-        Book book = BookBuilder.createBook().build();
-        Optional<Book> b = Optional.of(book);
-        when(repository.findById(anyLong())).thenReturn(b);
+        Book book = createBook().build();
+        Optional<Book> bookOptional = Optional.of(book);
+        when(repository.findById(anyLong())).thenReturn(bookOptional);
 
         BookDTO result = this.getBook.find(1L);
 

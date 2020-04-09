@@ -1,6 +1,5 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
-
 import br.com.phoebus.api.biblioteca.apirest.book.services.ListBooksImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

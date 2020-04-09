@@ -18,7 +18,7 @@ public class LoanDTO {
 
     private static final long serialVersionUID = 1L;
 
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "Loan time may not be empty")
     private String loanTime;
@@ -27,13 +27,6 @@ public class LoanDTO {
         return LoanDTO.builder()
                 .id(loan.getId())
                 .loanTime(loan.getLoanTime())
-                .build();
-    }
-
-    public static Loan to(LoanDTO loanDTO) {
-        return Loan.builder()
-                .id(loanDTO.getId())
-                .loanTime(loanDTO.getLoanTime())
                 .build();
     }
 }

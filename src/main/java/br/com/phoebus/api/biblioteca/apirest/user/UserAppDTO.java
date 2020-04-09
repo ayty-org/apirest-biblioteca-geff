@@ -19,7 +19,7 @@ public class UserAppDTO {
 
     private static final long serialVersionUID = 1L;
 
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "Name may not be empty")
     @Size(min = 2)
@@ -38,15 +38,6 @@ public class UserAppDTO {
                 .age(userApp.getAge())
                 .name(userApp.getName())
                 .telephone(userApp.getTelephone())
-                .build();
-    }
-
-    public static UserApp to(UserAppDTO userAppDTO) {
-        return UserApp.builder()
-                .id(userAppDTO.getId())
-                .age(userAppDTO.getAge())
-                .name(userAppDTO.getName())
-                .telephone(userAppDTO.getTelephone())
                 .build();
     }
 }
