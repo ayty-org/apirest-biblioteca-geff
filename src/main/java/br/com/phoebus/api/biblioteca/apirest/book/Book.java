@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,7 +46,8 @@ public class Book implements Serializable {
     private String year;
 
     @ManyToMany(mappedBy = "booksLends")
-    Set<Loan> lend;
+    private List<Loan> lend = new ArrayList<>();
+    //private Set<Loan> lend = new HashSet<>();
 
     public static Book to(BookDTO bookDTO) {
         return Book.builder()
@@ -55,5 +58,17 @@ public class Book implements Serializable {
                 .author(bookDTO.getAuthor())
                 .year(bookDTO.getYear())
                 .build();
+    }
+
+    public static List<Book> to(List<BookDTO> booksDTO) {
+        List<Book> books = new ArrayList<>();
+        for (BookDTO bookDTO : booksDTO) {
+            books.add(Book.to(bookDTO));
+        }
+        return books;
+    }
+
+    public static Page<Book> to(Page<BookDTO> pages) {
+        return pages.map(Book::to);
     }
 }

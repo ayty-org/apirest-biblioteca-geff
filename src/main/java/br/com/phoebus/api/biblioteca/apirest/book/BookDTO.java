@@ -5,10 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -46,5 +51,17 @@ public class BookDTO implements Serializable {
                 .author(book.getAuthor())
                 .year(book.getYear())
                 .build();
+    }
+
+    public static List<BookDTO> from(List<Book> books) {
+        List<BookDTO> booksDTO = new ArrayList<>();
+        for (Book book : books) {
+            booksDTO.add(BookDTO.from(book));
+        }
+        return booksDTO;
+    }
+
+    public static Page<BookDTO> from(Page<Book> pages) {
+        return pages.map(BookDTO::from);
     }
 }

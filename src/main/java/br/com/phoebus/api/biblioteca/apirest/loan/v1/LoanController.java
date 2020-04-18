@@ -2,11 +2,11 @@ package br.com.phoebus.api.biblioteca.apirest.loan.v1;
 
 
 import br.com.phoebus.api.biblioteca.apirest.loan.LoanDTO;
-import br.com.phoebus.api.biblioteca.apirest.loan.service.DeleteLoan;
-import br.com.phoebus.api.biblioteca.apirest.loan.service.EditLoan;
-import br.com.phoebus.api.biblioteca.apirest.loan.service.GetLoan;
-import br.com.phoebus.api.biblioteca.apirest.loan.service.ListLend;
-import br.com.phoebus.api.biblioteca.apirest.loan.service.SaveLoan;
+import br.com.phoebus.api.biblioteca.apirest.loan.service.DeleteLoanService;
+import br.com.phoebus.api.biblioteca.apirest.loan.service.EditLoanService;
+import br.com.phoebus.api.biblioteca.apirest.loan.service.GetLoanService;
+import br.com.phoebus.api.biblioteca.apirest.loan.service.ListLendService;
+import br.com.phoebus.api.biblioteca.apirest.loan.service.SaveLoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,37 +27,37 @@ import java.util.List;
 @RequestMapping(value = "v1/loan")
 public class LoanController {
 
-    private final SaveLoan saveLoan;
-    private final DeleteLoan deleteLoan;
-    private final ListLend listLend;
-    private final GetLoan getLoan;
-    private final EditLoan editLoan;
+    private final SaveLoanService saveLoanService;
+    private final DeleteLoanService deleteLoanService;
+    private final ListLendService listLendService;
+    private final GetLoanService getLoanService;
+    private final EditLoanService editLoanService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     void postLoan(@Valid @RequestBody LoanDTO newLoanDTO) {
-        saveLoan.save(newLoanDTO);
+        saveLoanService.save(newLoanDTO);
     }
 
     @DeleteMapping("/id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteLoanById(@PathVariable(value = "id") long id) {
-        deleteLoan.delete(id);
+        deleteLoanService.delete(id);
     }
 
     @GetMapping
     List<LoanDTO> findAll() {
-        return listLend.listLend();
+        return listLendService.listLend();
     }
 
     @GetMapping(value = "/{id}")
     LoanDTO getLoan(@PathVariable(value = "id") long id) {
-        return getLoan.getLoan(id);
+        return getLoanService.getLoan(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void putLoan(@Valid @PathVariable(value = "id") long id, @RequestBody LoanDTO attLoanDTO) {
-        editLoan.edit(id, attLoanDTO);
+        editLoanService.edit(id, attLoanDTO);
     }
 }

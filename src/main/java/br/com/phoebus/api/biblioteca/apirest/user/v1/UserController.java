@@ -1,11 +1,11 @@
 package br.com.phoebus.api.biblioteca.apirest.user.v1;
 
 import br.com.phoebus.api.biblioteca.apirest.user.UserAppDTO;
-import br.com.phoebus.api.biblioteca.apirest.user.service.DeleteUser;
-import br.com.phoebus.api.biblioteca.apirest.user.service.EditUser;
-import br.com.phoebus.api.biblioteca.apirest.user.service.GetUser;
-import br.com.phoebus.api.biblioteca.apirest.user.service.ListUsers;
-import br.com.phoebus.api.biblioteca.apirest.user.service.SaveUser;
+import br.com.phoebus.api.biblioteca.apirest.user.service.DeleteUserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.EditUserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.GetUserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.ListUsersService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.SaveUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,39 +26,39 @@ import java.util.List;
 @RequestMapping(value = "v1/user")
 public class UserController {
 
-    private final SaveUser saveUser;
-    private final DeleteUser deleteUser;
-    private final ListUsers listUsers;
-    private final GetUser getUser;
-    private final EditUser editUser;
+    private final SaveUserService saveUserService;
+    private final DeleteUserService deleteUserService;
+    private final ListUsersService listUsersService;
+    private final GetUserService getUserService;
+    private final EditUserService editUserService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     void postUser(@Valid @RequestBody UserAppDTO newUserDTO) {
-        saveUser.save(newUserDTO);
+        saveUserService.save(newUserDTO);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteUserById(@PathVariable(value = "id") long id) {
-        deleteUser.delete(id);
+        deleteUserService.delete(id);
     }
 
 
     @GetMapping
     List<UserAppDTO> listUsers() {
-        return listUsers.listUsers();
+        return listUsersService.listUsers();
     }
 
     @GetMapping("/{id}")
     UserAppDTO getUser(@PathVariable(value = "id") long id) {
-        return getUser.getUser(id);
+        return getUserService.getUser(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void putUser(@Valid @PathVariable(value = "id") long id, @RequestBody UserAppDTO attUserDTO) {
-        editUser.edit(id, attUserDTO);
+        editUserService.edit(id, attUserDTO);
     }
 
 }

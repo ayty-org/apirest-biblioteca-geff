@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,8 +40,9 @@ public class UserApp implements Serializable {
 
     private String telephone;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Loan> lend;
+    @OneToMany(mappedBy = "userApp")
+    private List<Loan> lend = new ArrayList<>();
+    //private Set<Loan> lend = new HashSet<>();
 
     public static UserApp to(UserAppDTO userAppDTO) {
         return UserApp.builder()
@@ -48,5 +51,17 @@ public class UserApp implements Serializable {
                 .name(userAppDTO.getName())
                 .age(userAppDTO.getAge())
                 .build();
+    }
+
+    public static List<UserApp> to(List<UserAppDTO> userAppDTOS) {
+        List<UserApp> userApps = new ArrayList<>();
+        for (UserAppDTO userAppDTO : userAppDTOS) {
+            userApps.add(UserApp.to(userAppDTO));
+        }
+        return userApps;
+    }
+
+    public static Page<UserApp> to(Page<UserAppDTO> pages) {
+        return pages.map(UserApp::to);
     }
 }

@@ -5,10 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,5 +42,17 @@ public class UserAppDTO {
                 .name(userApp.getName())
                 .telephone(userApp.getTelephone())
                 .build();
+    }
+
+    public static List<UserAppDTO> from(List<UserApp> users) {
+        List<UserAppDTO> userAppDTOS = new ArrayList<>();
+        for (UserApp userApp : users) {
+            userAppDTOS.add(UserAppDTO.from(userApp));
+        }
+        return userAppDTOS;
+    }
+
+    public static Page<UserAppDTO> from(Page<UserApp> pages) {
+        return pages.map(UserAppDTO::from);
     }
 }
