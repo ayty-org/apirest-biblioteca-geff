@@ -64,7 +64,7 @@ public class BookControllerV1 {
         return listPageBookService.ListBookOnPage(page, size);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void putBook(@Valid @PathVariable(value = "id") long id, @RequestBody BookDTO attBook) {
         editBookService.edit(id, attBook);

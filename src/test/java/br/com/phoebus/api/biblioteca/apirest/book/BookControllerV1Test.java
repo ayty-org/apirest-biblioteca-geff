@@ -56,14 +56,14 @@ public class BookControllerV1Test {
 
         when(getBookService.find(1L)).thenReturn(bookDTO);
 
-        mockMvc.perform(get("/v1/api/book/{id}", 1L)
+        mockMvc.perform(get("/v1/book/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.author", is("teste author")))
-                .andExpect(jsonPath("$.resume", is("teste resume")))
-                .andExpect(jsonPath("$.isbn", is("teste isbn")))
-                .andExpect(jsonPath("$.title", is("teste title")));
+                .andExpect(jsonPath("$.author", is(bookDTO.getAuthor())))
+                .andExpect(jsonPath("$.resume", is(bookDTO.getResume())))
+                .andExpect(jsonPath("$.isbn", is(bookDTO.getIsbn())))
+                .andExpect(jsonPath("$.title", is(bookDTO.getTitle())));
     }
 }
