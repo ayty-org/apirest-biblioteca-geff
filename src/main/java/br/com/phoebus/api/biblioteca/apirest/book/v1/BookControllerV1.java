@@ -28,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("v1/book")
-public class BookController {
+public class BookControllerV1 {
 
     private final SaveBookService saveBookService;
     private final DeleteBookService deleteBookService;

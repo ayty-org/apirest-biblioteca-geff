@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "v1/user")
-public class UserController {
+public class UserControllerV1 {
 
     private final SaveUserService saveUserService;
     private final DeleteUserService deleteUserService;

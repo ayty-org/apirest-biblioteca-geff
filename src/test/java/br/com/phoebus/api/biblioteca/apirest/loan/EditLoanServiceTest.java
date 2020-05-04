@@ -1,5 +1,6 @@
 package br.com.phoebus.api.biblioteca.apirest.loan;
 
+import br.com.phoebus.api.biblioteca.apirest.book.BookDTO;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.LoanInconsistencyInDataException;
 import br.com.phoebus.api.biblioteca.apirest.exceptions.LoanNotFoundException;
 import br.com.phoebus.api.biblioteca.apirest.loan.service.EditLoanServiceImpl;
@@ -13,6 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static br.com.phoebus.api.biblioteca.apirest.loan.builders.LoanBuilder.createLoan;
@@ -46,14 +48,16 @@ public class EditLoanServiceTest {
     @DisplayName("Deve editar um emprestimo")
     void shouldEditLoan() {
 
+        Long id = 1L;
         LoanDTO loanDTO = createLoanDTO()
                 .loanTime("Data Edit").build();
 
         Loan loan = createLoan().build();
+        loan.setId(id);
         Optional<Loan> loanOptional = Optional.of(loan);
         when(repository.findById(anyLong())).thenReturn(loanOptional);
 
-        editLoan.edit(anyLong(),loanDTO);
+        editLoan.edit(id,loanDTO);
 
         ArgumentCaptor<Loan> captor = ArgumentCaptor.forClass(Loan.class);
         verify(repository).save(captor.capture());
@@ -62,6 +66,7 @@ public class EditLoanServiceTest {
 
         assertAll("Loan",
                 () -> assertThat(result.getLoanTime(), is(loanDTO.getLoanTime())),
+                () -> assertThat(result.getBooksLends().size(), is(2)),
                 () -> assertThat(result.getBooksLends().get(0).getAuthor(), is(loanDTO.getBooks().get(0).getAuthor()))
         );
     }
@@ -80,6 +85,7 @@ public class EditLoanServiceTest {
 
         verify(repository, times(0)).save(loan);
     }
+
     @Test
     @DisplayName("Deve lançar uma exceção Not Found")
     void shouldNotFoundException() {
@@ -89,9 +95,9 @@ public class EditLoanServiceTest {
         Loan loan = createLoan().build();
         Optional<Loan> loanOptional = Optional.of(loan);
 
-        when(repository.existsById(anyLong())).thenReturn(false);
+        when(repository.findById(anyLong())).thenThrow(new LoanNotFoundException());
 
-        Assertions.assertThrows(LoanNotFoundException.class, () -> editLoan.edit(anyLong(),loanDTO));
+        Assertions.assertThrows(LoanNotFoundException.class, () -> editLoan.edit(3L,loanDTO));
 
         verify(repository, times(0)).save(loan);
 
