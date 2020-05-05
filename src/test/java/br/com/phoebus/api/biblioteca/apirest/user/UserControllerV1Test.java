@@ -1,11 +1,7 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
-import br.com.phoebus.api.biblioteca.apirest.user.service.DeleteUserService;
-import br.com.phoebus.api.biblioteca.apirest.user.service.EditUserService;
-import br.com.phoebus.api.biblioteca.apirest.user.service.GetUserService;
-import br.com.phoebus.api.biblioteca.apirest.user.service.ListPageUsersService;
-import br.com.phoebus.api.biblioteca.apirest.user.service.ListUsersService;
-import br.com.phoebus.api.biblioteca.apirest.user.service.SaveUserService;
+import br.com.phoebus.api.biblioteca.apirest.exceptions.UserNotFoundException;
+import br.com.phoebus.api.biblioteca.apirest.user.service.*;
 import br.com.phoebus.api.biblioteca.apirest.user.v1.UserControllerV1;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -25,9 +21,8 @@ import java.util.Arrays;
 import static br.com.phoebus.api.biblioteca.apirest.user.builders.UserAppDTOBuilder.createUserAppDTO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserControllerV1.class)
 @DisplayName("Valida a funcionalidade do controller de User")
 public class UserControllerV1Test {
+
+    private final String URL_USER = "/v1/user";
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,10 +55,27 @@ public class UserControllerV1Test {
     @DisplayName("Deleta um usuário")
     void shouldDeleteUserForID() throws Exception {
 
-        mockMvc.perform(delete("/v1/user/{id}", 1L)
+        mockMvc.perform(delete(URL_USER + "/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+
+        verify(deleteUserService).delete(1L);
+    }
+
+    @Test
+    @DisplayName("Edita um usuário")
+    void shouldEditUser() throws Exception {
+
+        mockMvc.perform(put(URL_USER + "/{id}", 1L)
+                .content(readJson("userAppDTOEdit.json")) //Estudar como utilizar outra maneira utilizando o ObjectMapper
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        //verify(editUserService).edit(1L, any(UserAppDTO.class));
+
     }
 
     @Test
@@ -71,7 +85,7 @@ public class UserControllerV1Test {
         UserAppDTO userAppDTO = createUserAppDTO().build();
         when(getUserService.getUser(1L)).thenReturn(userAppDTO);
 
-        mockMvc.perform(get("/v1/user/{id}", 1L)
+        mockMvc.perform(get(URL_USER + "/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -80,7 +94,33 @@ public class UserControllerV1Test {
                 .andExpect(jsonPath("$.age", is(userAppDTO.getAge())))
                 .andExpect(jsonPath("$.telephone", is(userAppDTO.getTelephone())));
 
+        verify(getUserService).getUser(1L);
     }
+
+    @Test
+    @DisplayName("Pesquisa usuário que não existe e lança exceção")
+    void shouldExceptionNotFoundUserForID() throws Exception {
+
+        when(getUserService.getUser(anyLong())).thenThrow( new UserNotFoundException());
+
+        mockMvc.perform(get(URL_USER+"{id}", 1L)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+    }
+
+    /*@Test
+    @DisplayName("Traz a lista de usuários por paginação")
+    void shouldListPageUseres() throws Exception {
+
+        UserAppDTO userApp1 = createUserAppDTO().id(1L).name("name user 1").telephone("111111111").build();
+        UserAppDTO userApp2 = createUserAppDTO().id(2L).name("name user 2").age(14).build();
+
+
+        Page<UserAppDTO> userAppDTOPage = new PageImpl<>(Collections.list(Arrays.asList(userApp1, userApp2)));
+
+    }*/
 
     @Test
     @DisplayName("Traz a lista de usuários")
@@ -91,7 +131,7 @@ public class UserControllerV1Test {
         UserAppDTO userApp3 = createUserAppDTO().id(3L).name("name user 3").build();
         when(listUsersService.listUsers()).thenReturn(Arrays.asList(userApp1, userApp2, userApp3));
 
-        mockMvc.perform(get("/v1/user")
+        mockMvc.perform(get(URL_USER)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -108,10 +148,26 @@ public class UserControllerV1Test {
                 .andExpect(jsonPath("$.[2].name", is(userApp3.getName())))
                 .andExpect(jsonPath("$.[2].age", is(userApp3.getAge())))
                 .andExpect(jsonPath("$.[2].telephone", is(userApp3.getTelephone())));
+
+        verify(listUsersService).listUsers();
+    }
+
+    @Test
+    @DisplayName("Salva um usuário")
+    void shouldSaveUser() throws Exception {
+
+        mockMvc.perform(post(URL_USER)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readJson("UserAppDTO.json"))) //Estudar como utilizar outra maneira utilizando o ObjectMapper
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        verify(saveUserService).save(any());
+
     }
 
     public static String readJson(String file) throws Exception {
-        byte[] bytes = Files.readAllBytes(Paths.get("src/test/java/resources/json/" + file).toAbsolutePath());
+        byte[] bytes = Files.readAllBytes(Paths.get("src/test/java/br/com/phoebus/api/biblioteca/apirest/user/json/" + file).toAbsolutePath());
         return new String(bytes);
     }
 }

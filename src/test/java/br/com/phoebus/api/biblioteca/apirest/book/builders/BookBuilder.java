@@ -9,7 +9,7 @@ public class BookBuilder {
                 .year("2020")
                 .author("Gefferson")
                 .isbn("2215466-8")
-                .resume("Este é um livro de Gefferson Pires para test")
+                .resume("Este eh um livro de Gefferson Pires para test")
                 .title("Geff Test");
     }
 }
