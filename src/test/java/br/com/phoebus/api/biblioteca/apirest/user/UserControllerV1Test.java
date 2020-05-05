@@ -18,12 +18,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static br.com.phoebus.api.biblioteca.apirest.user.builders.UserAppDTOBuilder.createUserAppDTO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -51,7 +54,14 @@ public class UserControllerV1Test {
     @MockBean
     private SaveUserService saveUserService;
 
-    public UserControllerV1Test() {
+    @Test
+    @DisplayName("Deleta um usuário")
+    void shouldDeleteUserForID() throws Exception {
+
+        mockMvc.perform(delete("/v1/user/{id}", 1L)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -98,6 +108,10 @@ public class UserControllerV1Test {
                 .andExpect(jsonPath("$.[2].name", is(userApp3.getName())))
                 .andExpect(jsonPath("$.[2].age", is(userApp3.getAge())))
                 .andExpect(jsonPath("$.[2].telephone", is(userApp3.getTelephone())));
+    }
 
+    public static String readJson(String file) throws Exception {
+        byte[] bytes = Files.readAllBytes(Paths.get("src/test/java/resources/json/" + file).toAbsolutePath());
+        return new String(bytes);
     }
 }
