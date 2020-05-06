@@ -27,7 +27,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "v1/loan")
+@RequestMapping(value = "/v1/loan")
 public class LoanControllerV1 {
 
     private final SaveLoanService saveLoanService;
@@ -64,7 +64,7 @@ public class LoanControllerV1 {
         return listPageLendService.ListLoanOnPage(page, size);
     }
 
-    @PutMapping
+    @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void putLoan(@Valid @PathVariable(value = "id") long id, @RequestBody LoanDTO attLoanDTO) {
         editLoanService.edit(id, attLoanDTO);

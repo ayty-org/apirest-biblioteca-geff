@@ -14,7 +14,9 @@ public class LoanDTOBuilder {
         return LoanDTO.builder()
                 .loanTime("09/04/2020")
                 .userApp(createUserAppDTO()
-                        .name("Name Loan DTO Test").build());
+                        .name("Name Loan DTO Test")
+                        .build())
+                .books(booksDTO());
     }
 
     public static List<BookDTO> booksDTO() {
