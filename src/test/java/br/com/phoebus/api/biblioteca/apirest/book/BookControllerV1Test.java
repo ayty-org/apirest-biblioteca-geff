@@ -92,7 +92,7 @@ public class BookControllerV1Test {
 
         when(getBookService.find(anyLong())).thenThrow(new BookNotFoundException());
 
-        mockMvc.perform(get(URI_BOOK + "{id}", 1L)
+        mockMvc.perform(get(URI_BOOK + "/{id}", 1L)
                 .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isNotFound());

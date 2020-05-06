@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +50,7 @@ public class DeleteLoanServiceTest {
 
         Assertions.assertThrows(LoanNotFoundException.class, () -> deleteLoan.delete(anyLong()));
 
-        verify(repository).deleteById(anyLong());
+        verify(repository, times(0)).deleteById(anyLong());
 
     }
 }
