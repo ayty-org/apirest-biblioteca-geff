@@ -28,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "v1/loan")
-public class LoanController {
+public class LoanControllerV1 {
 
     private final SaveLoanService saveLoanService;
     private final DeleteLoanService deleteLoanService;

@@ -19,8 +19,8 @@ public class LoanDTOBuilder {
 
     public static List<BookDTO> booksDTO() {
         ArrayList<BookDTO> booksDTO = new ArrayList<BookDTO>();
-        booksDTO.add(createBookDTO().author("Author Loan Test DTO").build());
-        booksDTO.add(createBookDTO().title("Title Loan Test DTO").build());
+        booksDTO.add(createBookDTO().id(1L).author("Author Loan Test DTO").build());
+        booksDTO.add(createBookDTO().id(2L).title("Title Loan Test DTO").build());
         return booksDTO;
     }
 }

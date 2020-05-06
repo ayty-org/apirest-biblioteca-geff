@@ -17,7 +17,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -70,7 +69,7 @@ public class UserControllerV1Test {
     void shouldDeleteUserForID() throws Exception {
 
         mockMvc.perform(delete(URL_USER + "/{id}", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+                .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -108,11 +107,11 @@ public class UserControllerV1Test {
     @DisplayName("Pesquisa usuário por ID")
     void shouldReturnUserForID() throws Exception {
 
-        UserAppDTO userAppDTO = createUserAppDTO().build();
+        UserAppDTO userAppDTO = createUserAppDTO().id(1L).build();
         when(getUserService.getUser(1L)).thenReturn(userAppDTO);
 
         MvcResult mvcResult = mockMvc.perform(get(URL_USER + "/{id}", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+                .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -131,7 +130,7 @@ public class UserControllerV1Test {
 
         when(getUserService.getUser(anyLong())).thenThrow(new UserNotFoundException());
 
-        mockMvc.perform(get(URL_USER + "{id}", 1L)
+        mockMvc.perform(get(URL_USER + "/{id}", 1L)
                 .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -145,7 +144,6 @@ public class UserControllerV1Test {
 
         UserAppDTO userApp1 = createUserAppDTO().id(1L).name("name user 1").telephone("111111111").build();
         UserAppDTO userApp2 = createUserAppDTO().id(2L).name("name user 2").age(14).build();
-
 
         Page<UserAppDTO> userAppDTOPage = new PageImpl<>(Collections.list(Arrays.asList(userApp1, userApp2)));
 

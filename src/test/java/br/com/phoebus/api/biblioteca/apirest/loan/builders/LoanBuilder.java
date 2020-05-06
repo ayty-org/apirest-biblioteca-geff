@@ -22,8 +22,8 @@ public class LoanBuilder {
 
     public static List<Book> books() {
         ArrayList<Book> books = new ArrayList<Book>();
-        books.add(createBook().author("Author Loan Test").build());
-        books.add(createBook().title("Title Loan Test").build());
+        books.add(createBook().id(1L).author("Author Loan Test").build());
+        books.add(createBook().id(2L).title("Title Loan Test").build());
         return books;
     }
 }
