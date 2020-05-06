@@ -1,12 +1,19 @@
 package br.com.phoebus.api.biblioteca.apirest.book;
 
-import br.com.phoebus.api.biblioteca.apirest.book.services.*;
+import br.com.phoebus.api.biblioteca.apirest.book.services.DeleteBookService;
+import br.com.phoebus.api.biblioteca.apirest.book.services.EditBookService;
+import br.com.phoebus.api.biblioteca.apirest.book.services.GetBookService;
+import br.com.phoebus.api.biblioteca.apirest.book.services.ListBooksService;
+import br.com.phoebus.api.biblioteca.apirest.book.services.ListPageBookService;
+import br.com.phoebus.api.biblioteca.apirest.book.services.SaveBookService;
 import br.com.phoebus.api.biblioteca.apirest.book.v1.BookControllerV1;
+import br.com.phoebus.api.biblioteca.apirest.exceptions.BookNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,10 +26,13 @@ import java.util.Arrays;
 import static br.com.phoebus.api.biblioteca.apirest.book.builders.BookDTOBuilder.createBookDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,20 +72,32 @@ public class BookControllerV1Test {
 
         when(getBookService.find(1L)).thenReturn(bookDTO);
 
-        MvcResult mvcResult = mockMvc.perform(get(URI_BOOK+"/{id}", 1L)
+        MvcResult mvcResult = mockMvc.perform(get(URI_BOOK + "/{id}", 1L)
                 .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isOk())
-                /*.andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.author", is(bookDTO.getAuthor())))
-                .andExpect(jsonPath("$.resume", is(bookDTO.getResume())))
-                .andExpect(jsonPath("$.isbn", is(bookDTO.getIsbn())))
-                .andExpect(jsonPath("$.title", is(bookDTO.getTitle())))*/.andReturn();
+                .andReturn();
 
         String resultResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertThat(objectMapper.writeValueAsString(bookDTO))
                 .isEqualToIgnoringWhitespace(resultResponseBody);
+
+        verify(getBookService).find(1L);
+    }
+
+    @Test
+    @DisplayName("Pesquisa livro que não existe e lança exceção")
+    void shouldExceptionNotFoundBookForID() throws Exception {
+
+        when(getBookService.find(anyLong())).thenThrow(new BookNotFoundException());
+
+        mockMvc.perform(get(URI_BOOK + "{id}", 1L)
+                .contentType(CONT_TYPE))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        verify(getBookService).find(1L);
     }
 
     @Test
@@ -88,21 +110,19 @@ public class BookControllerV1Test {
 
         when(listBookService.listBooks()).thenReturn(Arrays.asList(book1, book2, book3));
 
-        mockMvc.perform(get(URI_BOOK)
+        MvcResult mvcResult = mockMvc.perform(get(URI_BOOK)
                 .contentType("application/json"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*]", hasSize(3)))
-                .andExpect(jsonPath("$.[0].id", is(1)))
-                .andExpect(jsonPath("$.[0].year", is(book1.getYear())))
-                .andExpect(jsonPath("$.[0].author", is(book1.getAuthor())))
-                .andExpect(jsonPath("$.[0].isbn", is(book1.getIsbn())))
-                .andExpect(jsonPath("$.[0].resume", is(book1.getResume())))
-                .andExpect(jsonPath("$.[0].title", is(book1.getTitle())))
-                .andExpect(jsonPath("$.[1].id", is(2)))
-                .andExpect(jsonPath("$.[1].resume", is(book2.getResume())))
-                .andExpect(jsonPath("$.[2].id", is(3)))
-                .andExpect(jsonPath("$.[2].author", is(book3.getAuthor())));
+                .andReturn();
+
+        String resultResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(objectMapper.writeValueAsString(Arrays.asList(book1, book2, book3)))
+                .isEqualToIgnoringWhitespace(resultResponseBody);
+
+        verify(listBookService).listBooks();
     }
 
     @Test
@@ -116,33 +136,70 @@ public class BookControllerV1Test {
                 .content(objectMapper.writeValueAsString(bookDTO)))
                 .andDo(print())
                 .andExpect(status().isCreated());
-        
+
+        ArgumentCaptor<BookDTO> captorBook = ArgumentCaptor.forClass(BookDTO.class);
+        verify(saveBookService).save(captorBook.capture());
+        BookDTO result = captorBook.getValue();
+
+        assertThat(result.getId()).isEqualTo(bookDTO.getId());
+        assertThat(result.getTitle()).isEqualTo(bookDTO.getTitle());
+        assertThat(result.getResume()).isEqualTo(bookDTO.getResume());
+        assertThat(result.getAuthor()).isEqualTo(bookDTO.getAuthor());
+        assertThat(result.getIsbn()).isEqualTo(bookDTO.getIsbn());
+        assertThat(result.getYear()).isEqualTo(bookDTO.getYear());
     }
 
     @Test
     @DisplayName("Edita um livro")
     void shouldEditBook() throws Exception {
 
-        BookDTO bookDTO = createBookDTO().id(1L).build();
+        Long id = 1L;
+        BookDTO bookDTO = createBookDTO().id(id).build();
         bookDTO.setResume("Resumo alterado");
 
-        mockMvc.perform(put(URI_BOOK+"/{id}", 1L)
+        mockMvc.perform(put(URI_BOOK + "/{id}", id)
                 .contentType(CONT_TYPE)
                 .content(objectMapper.writeValueAsString(bookDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
+        ArgumentCaptor<BookDTO> captorBook = ArgumentCaptor.forClass(BookDTO.class);
+        ArgumentCaptor<Long> captorLong = ArgumentCaptor.forClass(Long.class);
+        verify(updateBookService).edit(captorLong.capture(), captorBook.capture());
+        BookDTO result = captorBook.getValue();
+
+        assertThat(captorLong.getValue()).isEqualTo(id);
+        assertThat(result.getId()).isEqualTo(bookDTO.getId());
+        assertThat(result.getTitle()).isEqualTo(bookDTO.getTitle());
+        assertThat(result.getResume()).isEqualTo(bookDTO.getResume());
+        assertThat(result.getAuthor()).isEqualTo(bookDTO.getAuthor());
+        assertThat(result.getIsbn()).isEqualTo(bookDTO.getIsbn());
+        assertThat(result.getYear()).isEqualTo(bookDTO.getYear());
     }
 
     @Test
     @DisplayName("Deleta um livro")
     void shouldDeleteBook() throws Exception {
 
-        mockMvc.perform(delete(URI_BOOK+"/{id}", 1L)
+        mockMvc.perform(delete(URI_BOOK + "/{id}", 1L)
                 .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
         verify(deleteBookService).delete(1L);
     }
+
+    /*@Test
+    @DisplayName("Lança uma exceção de Book Not Found ao deletar")
+    void shouldBookNotFoundException() throws Exception {
+
+        //when(deleteBookService).thenThrow().thenThrow(new BookNotFoundException()); //como vou mockar para lançar uma exceção se o delete não usa uma chamada de metodo?
+
+        mockMvc.perform(delete(URI_BOOK+"/{id}", 1L)
+                .contentType(CONT_TYPE))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        verify(deleteBookService).delete(1L);
+    }*/
 }

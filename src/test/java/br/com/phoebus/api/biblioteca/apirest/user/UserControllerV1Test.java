@@ -1,28 +1,39 @@
 package br.com.phoebus.api.biblioteca.apirest.user;
 
 import br.com.phoebus.api.biblioteca.apirest.exceptions.UserNotFoundException;
-import br.com.phoebus.api.biblioteca.apirest.user.service.*;
+import br.com.phoebus.api.biblioteca.apirest.user.service.DeleteUserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.EditUserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.GetUserService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.ListPageUsersService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.ListUsersService;
+import br.com.phoebus.api.biblioteca.apirest.user.service.SaveUserService;
 import br.com.phoebus.api.biblioteca.apirest.user.v1.UserControllerV1;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static br.com.phoebus.api.biblioteca.apirest.user.builders.UserAppDTOBuilder.createUserAppDTO;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,9 +45,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerV1Test {
 
     private final String URL_USER = "/v1/user";
+    private final String CONT_TYPE = "application/json";
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private DeleteUserService deleteUserService;
@@ -67,14 +81,26 @@ public class UserControllerV1Test {
     @DisplayName("Edita um usuário")
     void shouldEditUser() throws Exception {
 
-        mockMvc.perform(put(URL_USER + "/{id}", 1L)
-                .content(readJson("userAppDTOEdit.json")) //Estudar como utilizar outra maneira utilizando o ObjectMapper
-                .contentType(MediaType.APPLICATION_JSON))
+        Long id = 1L;
+        UserAppDTO userAppDTO = createUserAppDTO().id(id).build();
+        userAppDTO.setAge(10);
 
+        mockMvc.perform(put(URL_USER + "/{id}", 1L)
+                .contentType(CONT_TYPE)
+                .content(objectMapper.writeValueAsString(userAppDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        //verify(editUserService).edit(1L, any(UserAppDTO.class));
+        ArgumentCaptor<UserAppDTO> captorUserDTO = ArgumentCaptor.forClass(UserAppDTO.class);
+        ArgumentCaptor<Long> captorLong = ArgumentCaptor.forClass(Long.class);
+        verify(editUserService).edit(captorLong.capture(), captorUserDTO.capture());
+        UserAppDTO result = captorUserDTO.getValue();
+
+        assertThat(captorLong.getValue()).isEqualTo(id);
+        assertThat(result.getId()).isEqualTo(userAppDTO.getId());
+        assertThat(result.getTelephone()).isEqualTo(userAppDTO.getTelephone());
+        assertThat(result.getName()).isEqualTo(userAppDTO.getName());
+        assertThat(result.getAge()).isEqualTo(userAppDTO.getAge());
 
     }
 
@@ -85,14 +111,16 @@ public class UserControllerV1Test {
         UserAppDTO userAppDTO = createUserAppDTO().build();
         when(getUserService.getUser(1L)).thenReturn(userAppDTO);
 
-        mockMvc.perform(get(URL_USER + "/{id}", 1L)
+        MvcResult mvcResult = mockMvc.perform(get(URL_USER + "/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is(userAppDTO.getName())))
-                .andExpect(jsonPath("$.age", is(userAppDTO.getAge())))
-                .andExpect(jsonPath("$.telephone", is(userAppDTO.getTelephone())));
+                .andReturn();
+
+        String resultResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(objectMapper.writeValueAsString(userAppDTO))
+                .isEqualToIgnoringWhitespace(resultResponseBody);
 
         verify(getUserService).getUser(1L);
     }
@@ -101,13 +129,14 @@ public class UserControllerV1Test {
     @DisplayName("Pesquisa usuário que não existe e lança exceção")
     void shouldExceptionNotFoundUserForID() throws Exception {
 
-        when(getUserService.getUser(anyLong())).thenThrow( new UserNotFoundException());
+        when(getUserService.getUser(anyLong())).thenThrow(new UserNotFoundException());
 
-        mockMvc.perform(get(URL_USER+"{id}", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(URL_USER + "{id}", 1L)
+                .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
+        verify(getUserService).getUser(1L);
     }
 
     /*@Test
@@ -131,23 +160,16 @@ public class UserControllerV1Test {
         UserAppDTO userApp3 = createUserAppDTO().id(3L).name("name user 3").build();
         when(listUsersService.listUsers()).thenReturn(Arrays.asList(userApp1, userApp2, userApp3));
 
-        mockMvc.perform(get(URL_USER)
-                .accept(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(get(URL_USER)
+                .contentType(CONT_TYPE))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[*]", hasSize(3)))
-                .andExpect(jsonPath("$.[0].id", is(1)))
-                .andExpect(jsonPath("$.[0].name", is(userApp1.getName())))
-                .andExpect(jsonPath("$.[0].age", is(userApp1.getAge())))
-                .andExpect(jsonPath("$.[0].telephone", is(userApp1.getTelephone())))
-                .andExpect(jsonPath("$.[1].id", is(2)))
-                .andExpect(jsonPath("$.[1].name", is(userApp2.getName())))
-                .andExpect(jsonPath("$.[1].age", is(userApp2.getAge())))
-                .andExpect(jsonPath("$.[1].telephone", is(userApp2.getTelephone())))
-                .andExpect(jsonPath("$.[2].id", is(3)))
-                .andExpect(jsonPath("$.[2].name", is(userApp3.getName())))
-                .andExpect(jsonPath("$.[2].age", is(userApp3.getAge())))
-                .andExpect(jsonPath("$.[2].telephone", is(userApp3.getTelephone())));
+                .andExpect(jsonPath("$.[*]", hasSize(3))).andReturn();
+
+        String resultResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(objectMapper.writeValueAsString(Arrays.asList(userApp1, userApp2, userApp3)))
+                .isEqualToIgnoringWhitespace(resultResponseBody);
 
         verify(listUsersService).listUsers();
     }
@@ -156,18 +178,22 @@ public class UserControllerV1Test {
     @DisplayName("Salva um usuário")
     void shouldSaveUser() throws Exception {
 
+        UserAppDTO userAppDTO = createUserAppDTO().id(1L).build();
+
         mockMvc.perform(post(URL_USER)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(readJson("UserAppDTO.json"))) //Estudar como utilizar outra maneira utilizando o ObjectMapper
+                .contentType(CONT_TYPE)
+                .content(objectMapper.writeValueAsString(userAppDTO))) //Estudar como utilizar outra maneira utilizando o ObjectMapper
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        verify(saveUserService).save(any());
+        ArgumentCaptor<UserAppDTO> captorUser = ArgumentCaptor.forClass(UserAppDTO.class);
+        verify(saveUserService).save(captorUser.capture());
+        UserAppDTO result = captorUser.getValue();
 
-    }
+        assertThat(result.getId()).isEqualTo(userAppDTO.getId());
+        assertThat(result.getAge()).isEqualTo(userAppDTO.getAge());
+        assertThat(result.getName()).isEqualTo(userAppDTO.getName());
+        assertThat(result.getTelephone()).isEqualTo(userAppDTO.getTelephone());
 
-    public static String readJson(String file) throws Exception {
-        byte[] bytes = Files.readAllBytes(Paths.get("src/test/java/br/com/phoebus/api/biblioteca/apirest/user/json/" + file).toAbsolutePath());
-        return new String(bytes);
     }
 }
