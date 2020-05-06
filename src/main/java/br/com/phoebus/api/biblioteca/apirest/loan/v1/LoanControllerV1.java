@@ -43,7 +43,7 @@ public class LoanControllerV1 {
         saveLoanService.save(newLoanDTO);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteLoanById(@PathVariable(value = "id") long id) {
         deleteLoanService.delete(id);
