@@ -17,6 +17,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -73,7 +74,8 @@ public class BookControllerV1Test {
         when(getBookService.find(1L)).thenReturn(bookDTO);
 
         MvcResult mvcResult = mockMvc.perform(get(URI_BOOK + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -93,7 +95,8 @@ public class BookControllerV1Test {
         when(getBookService.find(anyLong())).thenThrow(new BookNotFoundException());
 
         mockMvc.perform(get(URI_BOOK + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -111,7 +114,8 @@ public class BookControllerV1Test {
         when(listBookService.listBooks()).thenReturn(Arrays.asList(book1, book2, book3));
 
         MvcResult mvcResult = mockMvc.perform(get(URI_BOOK)
-                .contentType("application/json"))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*]", hasSize(3)))
@@ -133,6 +137,7 @@ public class BookControllerV1Test {
 
         mockMvc.perform(post(URI_BOOK)
                 .contentType(CONT_TYPE)
+                .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(bookDTO)))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -159,6 +164,7 @@ public class BookControllerV1Test {
 
         mockMvc.perform(put(URI_BOOK + "/{id}", id)
                 .contentType(CONT_TYPE)
+                .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(bookDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -182,7 +188,8 @@ public class BookControllerV1Test {
     void shouldDeleteBook() throws Exception {
 
         mockMvc.perform(delete(URI_BOOK + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 

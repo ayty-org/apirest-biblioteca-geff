@@ -68,7 +68,8 @@ public class LoanControllerV1Test {
     void shouldDeleteLoanForID() throws Exception {
 
         mockMvc.perform(delete(URI_LOAN + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -85,6 +86,7 @@ public class LoanControllerV1Test {
 
         mockMvc.perform(put(URI_LOAN + "/{id}", 1L)
                 .contentType(CONT_TYPE)
+                .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(loanDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -115,7 +117,8 @@ public class LoanControllerV1Test {
         when(getLoanService.getLoan(anyLong())).thenReturn(loanDTO);
 
         MvcResult mvcResult = mockMvc.perform(get(URI_LOAN + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -133,7 +136,8 @@ public class LoanControllerV1Test {
         when(getLoanService.getLoan(anyLong())).thenThrow(new LoanNotFoundException());
 
         mockMvc.perform(get(URI_LOAN + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
@@ -152,7 +156,8 @@ public class LoanControllerV1Test {
         when(listLendService.listLend()).thenReturn(Arrays.asList(loan1, loan2, loan3, loan4));
 
         MvcResult mvcResult = mockMvc.perform(get(URI_LOAN)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -173,6 +178,7 @@ public class LoanControllerV1Test {
 
         mockMvc.perform(post(URI_LOAN)
                 .contentType(CONT_TYPE)
+                .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(loanDTO)))
                 .andDo(print())
                 .andExpect(status().isCreated());

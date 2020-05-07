@@ -17,15 +17,21 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static br.com.phoebus.api.biblioteca.apirest.user.builders.UserAppDTOBuilder.createUserAppDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,7 +75,8 @@ public class UserControllerV1Test {
     void shouldDeleteUserForID() throws Exception {
 
         mockMvc.perform(delete(URL_USER + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -86,6 +93,7 @@ public class UserControllerV1Test {
 
         mockMvc.perform(put(URL_USER + "/{id}", 1L)
                 .contentType(CONT_TYPE)
+                .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(userAppDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -111,7 +119,8 @@ public class UserControllerV1Test {
         when(getUserService.getUser(1L)).thenReturn(userAppDTO);
 
         MvcResult mvcResult = mockMvc.perform(get(URL_USER + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -131,23 +140,45 @@ public class UserControllerV1Test {
         when(getUserService.getUser(anyLong())).thenThrow(new UserNotFoundException());
 
         mockMvc.perform(get(URL_USER + "/{id}", 1L)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
         verify(getUserService).getUser(1L);
     }
 
-    /*@Test
+    @Test
     @DisplayName("Traz a lista de usuários por paginação")
     void shouldListPageUseres() throws Exception {
 
         UserAppDTO userApp1 = createUserAppDTO().id(1L).name("name user 1").telephone("111111111").build();
         UserAppDTO userApp2 = createUserAppDTO().id(2L).name("name user 2").age(14).build();
+        UserAppDTO userApp3 = createUserAppDTO().id(3L).name("name user 3").age(15).build();
+        UserAppDTO userApp4 = createUserAppDTO().id(4L).name("name user 4").build();
+        UserAppDTO userApp5 = createUserAppDTO().id(5L).name("name user 5").build();
 
-        Page<UserAppDTO> userAppDTOPage = new PageImpl<>(Collections.list(Arrays.asList(userApp1, userApp2)));
+        PageRequest pageRequest = PageRequest.of(1, 2);
 
-    }*/
+        List<UserAppDTO> userAppDTOList = Arrays.asList(userApp1,userApp2,userApp3,userApp4,userApp5);
+        Page<UserAppDTO> userAppDTOPage = new PageImpl<>(userAppDTOList, pageRequest, userAppDTOList.size());
+
+        when(listPageUsersService.ListUserOnPage(anyInt(),anyInt())).thenReturn(userAppDTOPage);
+
+        MvcResult mvcResult = mockMvc.perform(get(URL_USER)
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8")
+                .param("page", "1")
+                .param("size", "2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultResponseBody = mvcResult.getResponse().getContentAsString();
+
+        assertThat(objectMapper.writeValueAsString(userAppDTOPage))
+                .isEqualToIgnoringWhitespace(resultResponseBody);
+    }
 
     @Test
     @DisplayName("Traz a lista de usuários")
@@ -156,17 +187,21 @@ public class UserControllerV1Test {
         UserAppDTO userApp1 = createUserAppDTO().id(1L).name("name user 1").telephone("111111111").build();
         UserAppDTO userApp2 = createUserAppDTO().id(2L).name("name user 2").age(14).build();
         UserAppDTO userApp3 = createUserAppDTO().id(3L).name("name user 3").build();
-        when(listUsersService.listUsers()).thenReturn(Arrays.asList(userApp1, userApp2, userApp3));
+
+        List<UserAppDTO> userAppDTOList = Arrays.asList(userApp1, userApp2, userApp3);
+
+        when(listUsersService.listUsers()).thenReturn(userAppDTOList);
 
         MvcResult mvcResult = mockMvc.perform(get(URL_USER)
-                .contentType(CONT_TYPE))
+                .contentType(CONT_TYPE)
+                .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*]", hasSize(3))).andReturn();
 
         String resultResponseBody = mvcResult.getResponse().getContentAsString();
 
-        assertThat(objectMapper.writeValueAsString(Arrays.asList(userApp1, userApp2, userApp3)))
+        assertThat(objectMapper.writeValueAsString(userAppDTOList))
                 .isEqualToIgnoringWhitespace(resultResponseBody);
 
         verify(listUsersService).listUsers();
@@ -180,7 +215,8 @@ public class UserControllerV1Test {
 
         mockMvc.perform(post(URL_USER)
                 .contentType(CONT_TYPE)
-                .content(objectMapper.writeValueAsString(userAppDTO)))
+                .characterEncoding("utf-8")
+                .content(objectMapper.writeValueAsString(userAppDTO))) //Estudar como utilizar outra maneira utilizando o ObjectMapper
                 .andDo(print())
                 .andExpect(status().isCreated());
 
