@@ -180,7 +180,7 @@ public class UserControllerV1Test {
 
         mockMvc.perform(post(URL_USER)
                 .contentType(CONT_TYPE)
-                .content(objectMapper.writeValueAsString(userAppDTO))) //Estudar como utilizar outra maneira utilizando o ObjectMapper
+                .content(objectMapper.writeValueAsString(userAppDTO)))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
@@ -193,5 +193,31 @@ public class UserControllerV1Test {
         assertThat(result.getName()).isEqualTo(userAppDTO.getName());
         assertThat(result.getTelephone()).isEqualTo(userAppDTO.getTelephone());
 
+    }
+
+    @Test
+    @DisplayName("Tenta salvar usuário com noma vazio")
+    void shouldNotSaveUserNoNameAndLounchException () throws Exception {
+
+        UserAppDTO userAppDTO = createUserAppDTO().id(1L).name("").build();
+
+        mockMvc.perform(post(URL_USER)
+                .contentType(CONT_TYPE)
+                .content(objectMapper.writeValueAsString(userAppDTO)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Tenta salvar usuário com noma vazio")
+    void shouldNotSaveUserForLowAgeAndLounchException () throws Exception {
+
+        UserAppDTO userAppDTO = createUserAppDTO().age(2).build();
+
+        mockMvc.perform(post(URL_USER)
+                .contentType(CONT_TYPE)
+                .content(objectMapper.writeValueAsString(userAppDTO)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
